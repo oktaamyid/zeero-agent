@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any
 from .models import ChatRequest, ChatResponse, KeywordsResponse
 import re
+from difflib import get_close_matches
 
 ALLOWED_ORIGINS = ["*"]
 
@@ -44,13 +45,15 @@ class ZEEROAgent:
         s = user_input.lower()
         allow = [
             "ormik", "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
-            "jadwal", "schedule", "tanggal", "waktu", "divisi", "organisasi", "panitia",
-            "lokasi", "kampus", "alamat", "fasilitas", "kontak", "instagram",
-            "tips", "persiapan", "panduan", "dress", "pakaian", "seragam",
+            "jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari",
+            "divisi", "organisasi", "panitia",
+            "lokasi", "kampus", "alamat", "fasilitas", "dimana", "di mana",
+            "kontak", "instagram", "hubungi",
+            "tips", "persiapan", "panduan", "dress", "pakaian", "seragam", "outfit",
             "tata tertib", "aturan", "peraturan", "punishment", "hukuman", "sanksi",
             "atribut", "perlengkapan", "tugas", "assignment", "mentor", "kompi"
         ]
-        if any(k in s for k in allow):
+        if self._has_keyword(s, allow):
             return True
         # short greetings still allowed when mentioning ZEERO or ORMIK later
         return False
@@ -61,7 +64,7 @@ class ZEEROAgent:
         s = user_input.lower()
 
         # Greetings/intro
-        if any(k in s for k in ["halo", "hai", "hello", "zeero", "siapa"]):
+        if self._has_keyword(s, ["halo", "hai", "hello", "zeero", "siapa"]):
             return (
                 "Halo! Saya **ZEERO** 🤖, Asisten AI untuk ORMIK Explore 2025!\n\n"
                 "Saya siap bantu info tentang:\n"
@@ -74,7 +77,7 @@ class ZEEROAgent:
                 "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, atau `tips`! 😊"
             )
 
-        if any(k in s for k in ["jadwal", "schedule", "tanggal", "waktu"]):
+        if self._has_keyword(s, ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"]):
             lines = [f"• **{x['title']}** - {x['date']}" for x in self.context['ormikData']['schedule']]
             return (
                 "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n" +
@@ -84,7 +87,7 @@ class ZEEROAgent:
                 "📖 **Info Detail:** Unduh guidebook untuk rundown lengkap."
             )
 
-        if any(k in s for k in ["divisi", "struktur", "organisasi", "panitia", "tim"]):
+        if self._has_keyword(s, ["divisi", "struktur", "organisasi", "panitia", "tim"]):
             return (
                 "👥 **Struktur Organisasi ORMIK 2025:**\n\n"
                 "**🏆 Core Team:**\n"
@@ -94,7 +97,7 @@ class ZEEROAgent:
                 "Ingin tahu detail divisi tertentu? Tanya aja! 🌟"
             )
 
-        if any(k in s for k in ["lokasi", "kampus", "tempat", "alamat", "fasilitas"]):
+        if self._has_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
             return (
                 "🏫 **Lokasi Kegiatan ORMIK:**\n\n"
                 "**STT Terpadu Nurul Fikri**\n"
@@ -104,7 +107,7 @@ class ZEEROAgent:
                 "📍 Google Maps: \"STT Terpadu Nurul Fikri\""
             )
 
-        if any(k in s for k in ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram"]):
+        if self._has_keyword(s, ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"]):
             ig = self.context['ormikData']['contact']
             return (
                 "📞 **Kontak ORMIK 2025:**\n\n"
@@ -113,7 +116,7 @@ class ZEEROAgent:
                 "Semua komunikasi resmi via DM Instagram ya! ⏰ Respon: 2–4 jam kerja."
             )
 
-        if any(k in s for k in ["tips", "saran", "persiapan", "panduan", "aturan"]):
+        if self._has_keyword(s, ["tips", "saran", "persiapan", "panduan", "aturan"]):
             return (
                 "💡 **Tips Sukses ORMIK 2025:**\n\n"
                 "✅ **Sebelum:** Baca guidebook, siapkan dress code, istirahat cukup, cek jadwal, siapkan tas.\n"
@@ -121,7 +124,7 @@ class ZEEROAgent:
                 "✅ **Mindset:** Terbuka, berani tanya, nikmati proses. 🌟"
             )
 
-        if any(k in s for k in ["dress", "pakaian", "baju", "seragam"]):
+        if self._has_keyword(s, ["dress", "pakaian", "baju", "seragam", "outfit"]):
             return (
                 "👔 **Dress Code ORMIK 2025:**\n\n"
                 "**Putra:** Kemeja putih (dimasukkan), celana hitam/dongker, ikat pinggang hitam, kaos kaki putih, sepatu hitam. Rambut rapi, tanpa cat.\n"
@@ -129,13 +132,13 @@ class ZEEROAgent:
                 "**Dilarang:** Aksesori berlebihan, make up berlebih, softlens berwarna."
             )
 
-        if any(k in s for k in ["tata tertib", "peraturan", "tertib"]):
+        if self._has_keyword(s, ["tata tertib", "peraturan", "tertib"]):
             return (
                 "📋 **Tata Tertib:** Jaga nama baik kampus, hadir 06:30, ikuti rangkaian, hormati panitia, terapkan 6S, isi presensi, pakai atribut.\n"
                 "**Dilarang:** Senjata, rokok/vape, narkoba, alkohol, pornografi, kontak fisik lawan jenis, smartphone tanpa izin, perhiasan berlebih, rambut berwarna."
             )
 
-        if any(k in s for k in ["punishment", "hukuman", "sanksi", "pelanggaran"]):
+        if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran"]):
             return (
                 "⚖️ **Punishment:**\n"
                 "• Ringan: Pungut 10 sampah.\n"
@@ -144,7 +147,7 @@ class ZEEROAgent:
                 "• Khusus: Dilaporkan kampus (contoh: narkoba/pelecehan)."
             )
 
-        if any(k in s for k in ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
+        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
             return (
                 "🎒 **Atribut & Perlengkapan:**\n\n"
                 "**Day 1:** ATK, topi rimba navy, name tag, passport, kresek sepatu, sandal, alat salat, BPJS, tumbler, snack.\n"
@@ -152,7 +155,7 @@ class ZEEROAgent:
                 "**Per Kompi:** Trash bag."
             )
 
-        if any(k in s for k in ["tugas", "assignment", "kerjaan"]):
+        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]):
             return (
                 "📝 **Tugas ORMIK 2025:**\n\n"
                 "**Pra ORMIK (Individu):** Name tag ZEERO (A4 laminating), twibbon + tag @ormikxplore, video perkenalan reels, hafal Hymne & Mars.\n"
@@ -170,12 +173,12 @@ class ZEEROAgent:
     # === Utilities ===
     def _available_keywords(self):
         return [
-            'jadwal','schedule','tanggal','waktu',
+            'jadwal','schedule','tanggal','waktu','kapan','jam','hari',
             'divisi','struktur','organisasi','panitia','tim',
-            'lokasi','kampus','tempat','alamat','fasilitas',
-            'kontak','telepon','whatsapp','email','instagram',
+            'lokasi','kampus','tempat','alamat','fasilitas','dimana','di mana',
+            'kontak','telepon','whatsapp','email','instagram','hubungi','cp',
             'tips','saran','persiapan','panduan','aturan',
-            'dress code','pakaian','seragam','baju',
+            'dress code','pakaian','seragam','baju','outfit',
             'tata tertib','peraturan','tertib',
             'punishment','hukuman','sanksi','pelanggaran',
             'atribut','perlengkapan','barang','bawa','perlu',
@@ -184,14 +187,23 @@ class ZEEROAgent:
 
     def _get_keyword_confidence(self, user_input: str) -> float:
         s = user_input.lower()
-        high = ['jadwal','schedule','tanggal','waktu','kontak','contact','telepon','instagram','lokasi','alamat','kampus','tempat','dress code','pakaian','baju','seragam']
+        high = ['jadwal','schedule','tanggal','waktu','kapan','jam','hari',
+                'kontak','contact','telepon','instagram','lokasi','alamat','kampus','tempat','dimana','di mana',
+                'dress code','pakaian','baju','seragam','outfit']
         med  = ['divisi','struktur','panitia','tim','atribut','perlengkapan','barang','tugas','assignment','kerjaan','tata tertib','peraturan','punishment','hukuman','sanksi']
         conf = 0.0
         for k in high:
-            if k in s: conf += 0.4
+            if self._has_keyword(s, [k]): conf += 0.4
         for k in med:
-            if k in s: conf += 0.3
+            if self._has_keyword(s, [k]): conf += 0.3
         return min(conf, 1.0)
+
+    def _has_keyword(self, text: str, keywords: list[str]) -> bool:
+        tokens = re.findall(r"\w+", text.lower())
+        for token in tokens:
+            if get_close_matches(token, keywords, n=1, cutoff=0.8):
+                return True
+        return any(k in text for k in keywords)
 
     def _init_context(self) -> Dict[str, Any]:
         return {
