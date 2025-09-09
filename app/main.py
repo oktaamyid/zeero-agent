@@ -280,10 +280,15 @@ class ZEEROAgent:
 
     def _has_keyword(self, text: str, keywords: list[str]) -> bool:
         tokens = re.findall(r"\w+", text.lower())
+        keywords_set = set(k.lower() for k in keywords)
+        # Exact match: check if any token matches a keyword
+        if any(token in keywords_set for token in tokens):
+            return True
+        # Fuzzy match: check if any token is close to a keyword
         for token in tokens:
-            if get_close_matches(token, keywords, n=1, cutoff=0.8):
+            if get_close_matches(token, keywords_set, n=1, cutoff=0.8):
                 return True
-        return any(k in text for k in keywords)
+        return False
 
     def _init_context(self) -> Dict[str, Any]:
         return {
