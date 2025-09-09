@@ -244,35 +244,44 @@ class ZEEROAgent:
 
     def _get_keyword_based_response(self, user_input: str) -> str:
         s = user_input.lower()
-        if self._has_keyword(s, ["hak"]):
+        if self._has_keyword(s, ["hak", "hak peserta", "peserta"]):
             hak_list = self.get_ormik_info("hak_peserta")
             return (
                 "🎓 **Hak Peserta ORMIK 2025:**\n" +
                 "\n".join([f"{i+1}. {item}" for i, item in enumerate(hak_list)]) +
                 "\n\nApakah Anda ingin tahu juga kewajiban peserta?"
             )
-        if self._has_keyword(s, ["kewajiban"]):
+        if self._has_keyword(s, ["kewajiban", "wajib", "kewajiban peserta"]):
             kewajiban_list = self.get_ormik_info("kewajiban_peserta")
             return (
                 "📘 **Kewajiban Peserta ORMIK 2025:**\n" +
                 "\n".join([f"{i+1}. {item}" for i, item in enumerate(kewajiban_list)]) +
                 "\n\nApakah Anda ingin tahu juga hak peserta?"
             )
-        if self._has_keyword(s, ["ketentuan"]) and ("putra" in s):
-            putra_list = self.get_ormik_info("ketentuan_peserta", "putra")
-            return (
-                "👕 **Ketentuan Peserta Putra ORMIK 2025:**\n" +
-                "\n".join([f"{i+1}. {item}" for i, item in enumerate(putra_list)]) +
-                "\n\nApakah Anda ingin tahu juga ketentuan peserta putri?"
-            )
-        if self._has_keyword(s, ["ketentuan"]) and ("putri" in s):
-            putri_list = self.get_ormik_info("ketentuan_peserta", "putri")
-            return (
-                "👗 **Ketentuan Peserta Putri ORMIK 2025:**\n" +
-                "\n".join([f"{i+1}. {item}" for i, item in enumerate(putri_list)]) +
-                "\n\nApakah Anda ingin tahu juga ketentuan peserta putra?"
-            )
-        if self._has_keyword(s, ["perizinan", "izin"]):
+        if self._has_keyword(s, ["ketentuan", "putra", "putri", "dress code", "pakaian"]):
+            if "putra" in s:
+                putra_list = self.get_ormik_info("ketentuan_peserta", "putra")
+                return (
+                    "👕 **Ketentuan Peserta Putra ORMIK 2025:**\n" +
+                    "\n".join([f"{i+1}. {item}" for i, item in enumerate(putra_list)]) +
+                    "\n\nApakah Anda ingin tahu juga ketentuan peserta putri?"
+                )
+            elif "putri" in s:
+                putri_list = self.get_ormik_info("ketentuan_peserta", "putri")
+                return (
+                    "👗 **Ketentuan Peserta Putri ORMIK 2025:**\n" +
+                    "\n".join([f"{i+1}. {item}" for i, item in enumerate(putri_list)]) +
+                    "\n\nApakah Anda ingin tahu juga ketentuan peserta putra?"
+                )
+            else:
+                return (
+                    "👔 **Ketentuan Peserta ORMIK 2025:**\n\n"
+                    "**Putra:** Kemeja putih (dimasukkan), celana hitam/dongker, ikat pinggang hitam, kaos kaki putih, sepatu hitam. Rambut rapi, tanpa cat.\n"
+                    "**Putri:** Kemeja putih longgar, rok bahan hingga mata kaki, kaos kaki putih, sepatu hitam. Muslim jilbab segiempat+ciput; non‑Muslim rambut diikat.\n"
+                    "**Dilarang:** Aksesori berlebihan, make up berlebih, softlens berwarna.\n\n"
+                    "Ingin tahu detail untuk putra atau putri? Tanyakan misal: 'Ketentuan putra'."
+                )
+        if self._has_keyword(s, ["perizinan", "izin", "izinan"]):
             izin_saat = self.get_ormik_info("perizinan", "saat_ormik")
             izin_tidak = self.get_ormik_info("perizinan", "tidak_mengikuti")
             return (
@@ -283,26 +292,7 @@ class ZEEROAgent:
                 "\n".join([f"• {item}" for item in izin_tidak]) +
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau tata tertib?"
             )
-        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
-            if "day 1" in s or "day1" in s:
-                individu = self.get_ormik_info("atribut_perlengkapan", "individu", "day_1")
-                kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "day_1")
-                response = "🎒 **Atribut & Perlengkapan Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"• {item}" for item in individu]) + "\n\n**Kompi:**\n" + "\n".join([f"• {item}" for item in kompi])
-                return response + "\n\nApakah Anda ingin tahu juga atribut di Last Day?"
-            elif "last" in s or "akhir" in s:
-                individu = self.get_ormik_info("atribut_perlengkapan", "individu", "last_day")
-                kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "last_day")
-                response = "🎒 **Atribut & Perlengkapan Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"• {item}" for item in individu]) + "\n\n**Kompi:**\n" + "\n".join([f"• {item}" for item in kompi])
-                return response + "\n\nApakah Anda ingin tahu juga atribut di Day 1?"
-            else:
-                return (
-                    "🎒 **Atribut & Perlengkapan ORMIK 2025:**\n\n"
-                    "**Day 1 (Individu):** Makanan (snack level up, dll), ATK, topi rimba navy, name tag, passport, kresek sepatu, sandal, alat salat, BPJS, tumbler.\n"
-                    "**Per Kompi:** Trash bag.\n"
-                    "**Last Day:** Item serupa + konsumsi sesuai panduan.\n\n"
-                    "Ingin tahu detail atribut untuk hari tertentu? Tanyakan misal: 'Atribut Day 1' atau 'Atribut Last Day'."
-                )
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]):
+        if self._has_keyword(s, ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"]):
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("tugas", "individu", "day_1")
                 kompi = self.get_ormik_info("tugas", "kompi", "day_1")
@@ -364,23 +354,30 @@ class ZEEROAgent:
             )
 
         if self._has_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
+            k = self.context['ormikData']['kampus']
             return (
                 "🏫 **Lokasi Kegiatan ORMIK:**\n\n"
-                "**STT Terpadu Nurul Fikri Kampus B**\n"
-                "📍 Jl. Lenteng Agung Raya No. 20-21, Jagakarsa, Jakarta Selatan 12610\n\n"
+                f"**{k['nama']}**\n"
+                f"📍 {k['alamat']}, {k['kota']}, {k['provinsi']}\n\n"
                 "🗺️ **Fasilitas:** Auditorium, ruang kelas ber-AC, lab komputer, Masjid Al-Hikmah, kantin, area parkir.\n\n"
                 "🚌 **Akses:** TransJakarta (Lenteng Agung), KRL (Stasiun Lenteng Agung), angkot Pasar Minggu–Bogor.\n"
-                "📍 Google Maps: \"STT Terpadu Nurul Fikri\"\n\n"
+                f"📍 Google Maps: \"{k['nama']}\"\n\n"
                 "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau kontak panitia?"
             )
 
         if self._has_keyword(s, ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"]):
             ig = self.context['ormikData']['contact']
+            k = self.context['ormikData']['kampus']
             return (
                 "📞 **Kontak ORMIK 2025:**\n\n"
                 f"**Instagram DM:** {ig['instagram_handle']}\n"
                 f"Link: {ig['instagram']}\n\n"
                 "Semua komunikasi resmi via DM Instagram ya! ⏰ Respon: 2–4 jam kerja.\n\n"
+                "Untuk info umum kampus:\n"
+                f"• Hotline: {k['hotline']}\n"
+                f"• WhatsApp: {k['whatsapp']}\n"
+                f"• Email: {k['email']}\n"
+                f"• Website: {k['website']}\n\n"
                 "Apakah Anda ingin tahu juga tentang lokasi kampus atau jadwal kegiatan?"
             )
 
@@ -402,7 +399,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang tips persiapan atau atribut yang perlu dibawa?"
             )
 
-        if self._has_keyword(s, ["tata tertib", "peraturan", "tertib"]):
+        if self._has_keyword(s, ["tata tertib", "peraturan", "tertib", "tata", "aturan", "atur"]):
             tertib_list = self.get_ormik_info("tata_tertib")
             return (
                 "📋 **Tata Tertib Peserta ORMIK 2025:**\n" +
@@ -410,7 +407,7 @@ class ZEEROAgent:
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau hak peserta?"
             )
 
-        if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran"]):
+        if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa"]):
             if "ringan" in s:
                 ringan = self.get_ormik_info("punishment", "ringan")
                 response = "⚖️ **Punishment Ringan ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in ringan])
@@ -437,7 +434,7 @@ class ZEEROAgent:
                     "Ingin tahu detail punishment tertentu? Tanyakan misal: 'Punishment ringan' atau 'Punishment khusus'."
                 )
 
-        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
+        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa"]):
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("atribut_perlengkapan", "individu", "day_1")
                 kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "day_1")
@@ -509,6 +506,16 @@ class ZEEROAgent:
                 "contact": {
                     "instagram": "https://www.instagram.com/ormikxplore/",
                     "instagram_handle": "@ormikxplore"
+                },
+                "kampus": {
+                    "nama": "STT Terpadu Nurul Fikri Kampus B",
+                    "alamat": "Jl. Raya Lenteng Agung No.20–21, Srengseng Sawah, Jagakarsa, Jakarta Selatan",
+                    "kota": "Jakarta Selatan",
+                    "provinsi": "DKI Jakarta",
+                    "hotline": "021-7863191",
+                    "whatsapp": "0857-1624-3174",
+                    "email": "info@nurulfikri.ac.id",
+                    "website": "https://nurulfikri.ac.id"
                 }
             }
         }
