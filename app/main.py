@@ -96,7 +96,7 @@ class ZEEROAgent:
                 "• Project Officer (PO)\n• Sekretaris\n• Bendahara\n• Liaison Officer (LO)\n\n"
                 "**⚡ Divisi Operasional:**\n"
                 "• Event\n• Media\n• Kreatif\n• Kedisiplinan\n• Mentor\n• Logistik\n• Konsumsi\n• Medis\n• IT Support\n\n"
-                "Ingin tahu detail divisi tertentu? Tanya aja! 🌟"
+                "Ingin tahu detail divisi tertentu? Tanya aja yah! 🌟"
             )
 
         if self._has_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
