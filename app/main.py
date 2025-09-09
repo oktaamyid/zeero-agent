@@ -248,14 +248,14 @@ class ZEEROAgent:
             hak_list = self.get_ormik_info("hak_peserta")
             return (
                 "🎓 **Hak Peserta ORMIK 2025:**\n" +
-                "\n".join([f"{i+1}. {item}" for i, item in enumerate(hak_list)]) +
+                "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(hak_list)]) +
                 "\n\nApakah Anda ingin tahu juga kewajiban peserta?"
             )
         if self._has_keyword(s, ["kewajiban", "wajib", "kewajiban peserta"]):
             kewajiban_list = self.get_ormik_info("kewajiban_peserta")
             return (
                 "📘 **Kewajiban Peserta ORMIK 2025:**\n" +
-                "\n".join([f"{i+1}. {item}" for i, item in enumerate(kewajiban_list)]) +
+                "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(kewajiban_list)]) +
                 "\n\nApakah Anda ingin tahu juga hak peserta?"
             )
         if self._has_keyword(s, ["ketentuan", "putra", "putri", "dress code", "pakaian"]):
@@ -263,14 +263,14 @@ class ZEEROAgent:
                 putra_list = self.get_ormik_info("ketentuan_peserta", "putra")
                 return (
                     "👕 **Ketentuan Peserta Putra ORMIK 2025:**\n" +
-                    "\n".join([f"{i+1}. {item}" for i, item in enumerate(putra_list)]) +
+                    "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(putra_list)]) +
                     "\n\nApakah Anda ingin tahu juga ketentuan peserta putri?"
                 )
             elif "putri" in s:
                 putri_list = self.get_ormik_info("ketentuan_peserta", "putri")
                 return (
                     "👗 **Ketentuan Peserta Putri ORMIK 2025:**\n" +
-                    "\n".join([f"{i+1}. {item}" for i, item in enumerate(putri_list)]) +
+                    "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(putri_list)]) +
                     "\n\nApakah Anda ingin tahu juga ketentuan peserta putra?"
                 )
             else:
@@ -296,17 +296,17 @@ class ZEEROAgent:
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("tugas", "individu", "day_1")
                 kompi = self.get_ormik_info("tugas", "kompi", "day_1")
-                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Last Day?"
             elif "last" in s or "akhir" in s:
                 individu = self.get_ormik_info("tugas", "individu", "last_day")
                 kompi = self.get_ormik_info("tugas", "kompi", "last_day")
-                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Day 1?"
             elif "pra" in s or "ormik" in s:
                 individu = self.get_ormik_info("tugas", "individu", "pra_ormik")
                 kompi = self.get_ormik_info("tugas", "kompi", "pra_ormik")
-                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Day 1 atau Last Day?"
             else:
                 return (
@@ -403,7 +403,7 @@ class ZEEROAgent:
             tertib_list = self.get_ormik_info("tata_tertib")
             return (
                 "📋 **Tata Tertib Peserta ORMIK 2025:**\n" +
-                "\n".join([f"{i+1}. {item}" for i, item in enumerate(tertib_list)]) +
+                "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(tertib_list)]) +
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau hak peserta?"
             )
 
