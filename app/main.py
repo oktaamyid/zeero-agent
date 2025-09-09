@@ -1,3 +1,4 @@
+    FUZZY_MATCH_CUTOFF = 0.8  # Class constant for fuzzy match cutoff
 from fastapi import FastAPI, Depends, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any
@@ -55,7 +56,7 @@ class ZEEROAgent:
             "atribut", "perlengkapan", "tugas", "assignment", "mentor", "kompi",
             "pra ormik", "pra-ormik", "pra", "day 1", "day-1", "last day", "hari pertama", "hari terakhir"
         ]
-        if self._has_keyword(s, allow):
+    if self._has_any_keyword(s, allow):
             return True
         # short greetings still allowed when mentioning ZEERO or ORMIK later
         return False
@@ -66,7 +67,7 @@ class ZEEROAgent:
         s = user_input.lower()
 
         # Greetings/intro
-        if self._has_keyword(s, ["halo", "hai", "hello", "zeero", "siapa"]):
+    if self._has_any_keyword(s, ["halo", "hai", "hello", "zeero", "siapa"]):
             return (
                 "Halo! Saya **ZEERO** 🤖, Asisten AI untuk ORMIK Explore 2025!\n\n"
                 "Saya siap bantu info tentang:\n"
@@ -79,7 +80,7 @@ class ZEEROAgent:
                 "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, atau `tips`! 😊"
             )
 
-        if self._has_keyword(s, ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"]):
+    if self._has_any_keyword(s, ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"]):
             lines = [f"• **{x['title']}** - {x['date']}" for x in self.context['ormikData']['schedule']]
             return (
                 "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n" +
@@ -89,7 +90,7 @@ class ZEEROAgent:
                 "📖 **Info Detail:** Unduh guidebook untuk rundown lengkap."
             )
 
-        if self._has_keyword(s, ["divisi", "struktur", "organisasi", "panitia", "tim"]):
+    if self._has_any_keyword(s, ["divisi", "struktur", "organisasi", "panitia", "tim"]):
             return (
                 "👥 **Struktur Organisasi ORMIK 2025:**\n\n"
                 "**🏆 Core Team:**\n"
@@ -99,7 +100,7 @@ class ZEEROAgent:
                 "Ingin tahu detail divisi tertentu? Tanya aja yah! 🌟"
             )
 
-        if self._has_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
+    if self._has_any_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
             return (
                 "🏫 **Lokasi Kegiatan ORMIK:**\n\n"
                 "**STT Terpadu Nurul Fikri**\n"
@@ -109,7 +110,7 @@ class ZEEROAgent:
                 "📍 Google Maps: \"STT Terpadu Nurul Fikri\""
             )
 
-        if self._has_keyword(s, ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"]):
+    if self._has_any_keyword(s, ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"]):
             ig = self.context['ormikData']['contact']
             return (
                 "📞 **Kontak ORMIK 2025:**\n\n"
@@ -118,7 +119,7 @@ class ZEEROAgent:
                 "Semua komunikasi resmi via DM Instagram ya! ⏰ Respon: 2–4 jam kerja."
             )
 
-        if self._has_keyword(s, ["tips", "saran", "persiapan", "panduan", "aturan"]):
+    if self._has_any_keyword(s, ["tips", "saran", "persiapan", "panduan", "aturan"]):
             return (
                 "💡 **Tips Sukses ORMIK 2025:**\n\n"
                 "✅ **Sebelum:** Baca guidebook, siapkan dress code, istirahat cukup, cek jadwal, siapkan tas.\n"
@@ -126,7 +127,7 @@ class ZEEROAgent:
                 "✅ **Mindset:** Terbuka, berani tanya, nikmati proses. 🌟"
             )
 
-        if self._has_keyword(s, ["dress", "pakaian", "baju", "seragam", "outfit"]):
+    if self._has_any_keyword(s, ["dress", "pakaian", "baju", "seragam", "outfit"]):
             return (
                 "👔 **Dress Code ORMIK 2025:**\n\n"
                 "**Putra:** Kemeja putih (dimasukkan), celana hitam/dongker, ikat pinggang hitam, kaos kaki putih, sepatu hitam. Rambut rapi, tanpa cat.\n"
@@ -134,13 +135,13 @@ class ZEEROAgent:
                 "**Dilarang:** Aksesori berlebihan, make up berlebih, softlens berwarna."
             )
 
-        if self._has_keyword(s, ["tata tertib", "peraturan", "tertib"]):
+    if self._has_any_keyword(s, ["tata tertib", "peraturan", "tertib"]):
             return (
                 "📋 **Tata Tertib:** Jaga nama baik kampus, hadir 06:30, ikuti rangkaian, hormati panitia, terapkan 6S, isi presensi, pakai atribut.\n"
                 "**Dilarang:** Senjata, rokok/vape, narkoba, alkohol, pornografi, kontak fisik lawan jenis, smartphone tanpa izin, perhiasan berlebih, rambut berwarna."
             )
 
-        if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran"]):
+    if self._has_any_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran"]):
             return (
                 "⚖️ **Punishment:**\n"
                 "• Ringan: Pungut 10 sampah.\n"
@@ -149,7 +150,7 @@ class ZEEROAgent:
                 "• Khusus: Dilaporkan kampus (contoh: narkoba/pelecehan)."
             )
 
-        if self._has_keyword(s, ["hak"]):
+    if self._has_any_keyword(s, ["hak"]):
             return (
                 "🎓 **Hak Peserta:**\n"
                 "1. Mengeluarkan pendapat.\n"
@@ -161,7 +162,7 @@ class ZEEROAgent:
                 "7. Melaporkan tindakan panitia yang merugikan."
             )
 
-        if self._has_keyword(s, ["kewajiban"]):
+    if self._has_any_keyword(s, ["kewajiban"]):
             return (
                 "📘 **Kewajiban Peserta:**\n"
                 "1. Mengikuti seluruh rangkaian ORMIK.\n"
@@ -169,7 +170,7 @@ class ZEEROAgent:
                 "3. Menaati seluruh ketentuan panitia."
             )
 
-        if self._has_keyword(s, ["ketentuan"]) and ("putra" in s):
+        if self._has_any_keyword(s, ["ketentuan"]) and self._has_any_keyword(s, ["putra"]):
             return (
                 "👕 **Ketentuan Putra:**\n"
                 "• Pakaian rapi, baju dimasukkan, lengan tidak digulung, tidak ketat.\n"
@@ -179,7 +180,7 @@ class ZEEROAgent:
                 "• Dilarang membawa narkoba, alkohol, rokok/vape, senjata tajam."
             )
 
-        if self._has_keyword(s, ["ketentuan"]) and ("putri" in s):
+        if self._has_any_keyword(s, ["ketentuan"]) and self._has_any_keyword(s, ["putri"]):
             return (
                 "👗 **Ketentuan Putri:**\n"
                 "• Pakaian longgar tidak transparan, baju tidak dimasukkan.\n"
@@ -189,7 +190,7 @@ class ZEEROAgent:
                 "• Tanpa aksesori (jaket, gelang/kalung, topi) dan barang terlarang."
             )
 
-        if self._has_keyword(s, ["perizinan", "izin"]):
+    if self._has_any_keyword(s, ["perizinan", "izin"]):
             return (
                 "📝 **Perizinan:**\n"
                 "• Saat acara: minta izin ke Tim Kedisiplinan atau Mentor dengan alasan jelas.\n"
@@ -197,7 +198,7 @@ class ZEEROAgent:
                 "  Format: Nama - Kompi - Alasan - Bukti."
             )
 
-        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
+    if self._has_any_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
             return (
                 "🎒 **Atribut & Perlengkapan:**\n\n"
                 "**Day 1:** ATK, topi rimba navy, name tag, passport, kresek sepatu, sandal, alat salat, BPJS, tumbler, snack.\n"
@@ -205,7 +206,7 @@ class ZEEROAgent:
                 "**Per Kompi:** Trash bag."
             )
 
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_keyword(s, ["pra ormik", "pra-ormik", "praormik", "pra"]):
+    if self._has_any_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_any_keyword(s, ["pra ormik", "pra-ormik", "praormik", "pra"]):
             return (
                 "📝 **Tugas Pra ORMIK:**\n\n"
                 "• Individu: Name tag ZEERO (A4 laminating), unggah twibbon + tag @ormikxplore, video perkenalan reels, hafal Hymne & Mars.\n"
@@ -213,7 +214,7 @@ class ZEEROAgent:
                 "Mau info tugas Day 1 atau Last Day juga? 😊"
             )
 
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_keyword(s, ["day 1", "day-1", "hari pertama"]):
+    if self._has_any_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_any_keyword(s, ["day 1", "day-1", "hari pertama"]):
             return (
                 "📝 **Tugas Day 1:**\n\n"
                 "• Individu: Membuat resume materi Day 1.\n"
@@ -221,7 +222,7 @@ class ZEEROAgent:
                 "Ingin tahu tugas untuk Pra ORMIK atau Last Day juga? 🤔"
             )
 
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_keyword(s, ["last day", "hari terakhir", "lastday"]):
+    if self._has_any_keyword(s, ["tugas", "assignment", "kerjaan"]) and self._has_any_keyword(s, ["last day", "hari terakhir", "lastday"]):
             return (
                 "📝 **Tugas Last Day:**\n\n"
                 "• Individu: Beri mini gift ke Mentor serta dua surat berbentuk pesawat untuk Mentor dan salah satu panitia.\n"
@@ -229,7 +230,7 @@ class ZEEROAgent:
                 "Mau sekalian lihat tugas Pra ORMIK atau Day 1? 😊"
             )
 
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]):
+    if self._has_any_keyword(s, ["tugas", "assignment", "kerjaan"]):
             return (
                 "📝 **Tugas ORMIK 2025 (Ringkasan):**\n\n"
                 "• Pra ORMIK: Name tag, twibbon IG, video perkenalan, hafal lagu.\n"
@@ -298,8 +299,6 @@ class ZEEROAgent:
                 "schedule": [
                     {"id": "pra-ormik", "title": "PRA ORMIK", "date": "Senin, Sept 8, 2025", "fullDate": "2025-09-08"},
                     {"id": "day-1", "title": "DAY 1", "date": "Selasa, Sept 16, 2025", "fullDate": "2025-09-16"},
-                    {"id": "day-2", "title": "DAY 2", "date": "Rabu, Sept 17, 2025", "fullDate": "2025-09-17"},
-                    {"id": "day-3", "title": "DAY 3", "date": "Kamis, Sept 18, 2025", "fullDate": "2025-09-18"},
                     {"id": "last-day", "title": "LAST DAY", "date": "Sabtu, Sept 20, 2025", "fullDate": "2025-09-20"}
                 ],
                 "contact": {
