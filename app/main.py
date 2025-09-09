@@ -24,8 +24,189 @@ OFFTOPIC_MSG = (
 class ZEEROAgent:
     def __init__(self) -> None:
         self.context = self._init_context()
+        
+        # Knowledge base ORMIK Explore 2025 STT NF
+        self.ormik_data = {
+            "tata_tertib": [
+                "Peserta wajib menjaga nama baik Almamater STT Terpadu Nurul Fikri.",
+                "Peserta wajib datang tepat waktu pada pukul 06.30 WIB.",
+                "Peserta wajib mengikuti seluruh rangkaian ORMIK dan wajib izin apabila tidak bisa mengikuti atau meninggalkan serangkaian acara ORMIK.",
+                "Peserta wajib menghormati dan menghargai panitia maupun sesama peserta ORMIK.",
+                "Peserta wajib menjaga sikap, perilaku, dan tidak boleh gaduh selama acara berlangsung.",
+                "Peserta wajib menerapkan 6S (Senyum, Salam, Sapa, Sopan, Santun, dan Semangat) kepada siapapun.",
+                "Peserta wajib mengisi semua presensi yang disediakan oleh panitia.",
+                "Peserta wajib menggunakan pakaian yang telah ditentukan panitia dari hari pertama hingga akhir.",
+                "Peserta tidak boleh meninggalkan ruang kelas tanpa seizin Tim Kedisiplinan dan Mentor.",
+                "Peserta wajib memakai atribut yang sesuai dengan yang sudah ditentukan.",
+                "Peserta wajib membawa dan melaksanakan penugasan yang diberikan dengan sebaik-baiknya dan penuh tanggung jawab.",
+                "Dilarang membawa senjata tajam dan senjata api.",
+                "Dilarang membawa, mengedarkan, dan menggunakan rokok, rokok elektrik (vape), obat-obatan terlarang, minuman keras, serta barang yang berbau pornografi.",
+                "Dilarang mengikuti rangkaian acara ORMIK dalam keadaan di bawah pengaruh minuman beralkohol dan obat-obatan terlarang.",
+                "Dilarang melakukan kontak fisik dengan lawan jenis, baik peserta maupun panitia ORMIK.",
+                "Dilarang menggunakan smartphone selama acara berlangsung, kecuali jika telah mendapatkan izin dari Mentor dan Tim Kedisiplinan.",
+                "Dilarang menggunakan kalimat atau perkataan yang merendahkan pihak lain.",
+                "Dilarang memakai perhiasan, make up berlebihan, tindik, bertato, dan rambut berwarna."
+            ],
+            "hak_peserta": [
+                "Mengeluarkan pendapat, baik secara lisan maupun tulisan.",
+                "Memperoleh perlakuan yang adil dan layak berdasarkan nilai-nilai kemanusiaan.",
+                "Mendapat pembelaan dari panitia apabila diperlakukan secara tidak adil.",
+                "Mendapat informasi yang jelas tentang jadwal kegiatan dan segala yang berkaitan dengan kegiatan ORMIK STT NF.",
+                "Mendapatkan materi ORMIK STT NF.",
+                "Mendapatkan sertifikat bagi yang mengikuti seluruh rangkaian kegiatan ORMIK STT NF, sesuai dengan ketentuan panitia pelaksana.",
+                "Melaporkan segala tindakan panitia yang melanggar nilai kemanusiaan dan merugikan STT NF."
+            ],
+            "kewajiban_peserta": [
+                "Mengikuti seluruh rangkaian kegiatan ORMIK STT NF atau yang telah dijadwalkan oleh panitia pelaksana.",
+                "Wajib menjaga nama baik STT Terpadu Nurul Fikri dan IM STT NF.",
+                "Menaati segala ketentuan yang telah ditetapkan oleh panitia pelaksana."
+            ],
+            "ketentuan_peserta": {
+                "putra": [
+                    "Pakaian bersih, rapi, dan sopan.",
+                    "Baju dimasukkan.",
+                    "Lengan tidak digulung.",
+                    "Tidak ketat.",
+                    "Menggunakan ikat pinggang hitam.",
+                    "Menggunakan kaos kaki berwarna putih diatas mata kaki.",
+                    "Rambut tidak dicat dan rapi.",
+                    "Menggunakan sepatu berwarna dominan hitam.",
+                    "Kuku bersih dan tidak panjang.",
+                    "Dilarang menggunakan aksesori seperti jaket, gelang/kalung, topi (kecuali jam tangan).",
+                    "Dilarang membawa barang terlarang seperti narkoba, minuman keras/alkohol, rokok/vape, senjata tajam atau alat berbahaya."
+                ],
+                "putri": [
+                    "Pakaian bersih, rapi, dan sopan.",
+                    "Mengenakan pakaian yang longgar, tidak transparan, dan tidak memperlihatkan lekuk tubuh.",
+                    "Baju tidak dimasukkan (dikeluarkan).",
+                    "Pakaian tidak ketat.",
+                    "Lengan baju tidak digulung.",
+                    "Wajib mengenakan rok bahan (bukan rok span) dengan panjang hingga mata kaki.",
+                    "Menggunakan kaos kaki berwarna putih di atas mata kaki.",
+                    "Rambut tidak dicat dan rapi.",
+                    "Bagi yang beragama Islam, diwajibkan menggunakan jilbab segiempat dan ciput.",
+                    "Bagi non muslim yang tidak mengenakan jilbab, rambut yang panjangnya melebihi bahu wajib diikat rapi selama acara berlangsung.",
+                    "Menggunakan sepatu berwarna dominan hitam.",
+                    "Kuku bersih, tidak panjang, dan tidak diwarnai.",
+                    "Dilarang memakai riasan (make up) yang berlebihan.",
+                    "Tidak diperkenankan menggunakan kontak lensa (softlens) yang berwarna.",
+                    "Dilarang menggunakan aksesori seperti jaket, gelang/kalung, topi (kecuali jam tangan).",
+                    "Dilarang membawa barang terlarang seperti narkoba, minuman keras/alkohol, rokok/vape, senjata tajam/alat berbahaya."
+                ]
+            },
+            "perizinan": {
+                "saat_ormik": [
+                    "Izin dapat dilakukan saat ORMIK berlangsung dengan cara melakukan perizinan langsung kepada Tim Kedisiplinan atau Mentor yang berada diruangan dan memberikan alasannya."
+                ],
+                "tidak_mengikuti": [
+                    "Peserta ORMIK yang tidak mengikuti kegiatan, diwajibkan membuat surat izin dan mengirimkannya via WhatsApp kepada Mentor masing-masing.",
+                    "Izin diberitahukan H-1 (selambat-lambatnya pukul 23.59 WIB) sebelum acara berlangsung.",
+                    "Memberikan bukti otentik bahwa yang bersangkutan memiliki keperluan atau kendala di luar acara ORMIK."
+                ]
+            },
+            "punishment": {
+                "ringan": [
+                    "Memungut 10 sampah di area kampus.",
+                    "Contoh pelanggaran: melanggar aturan-aturan yang telah ditetapkan (1x pelanggaran)."
+                ],
+                "sedang": [
+                    "Menyanyikan Lagu Mars STT Nurul Fikri.",
+                    "Membuat surat permintaan maaf yang ditandatangani minimal 15 Panitia ORMIK.",
+                    "Contoh pelanggaran: melanggar aturan-aturan yang telah ditetapkan (2x pelanggaran)."
+                ],
+                "berat": [
+                    "Akan mendapatkan evaluasi langsung dari Project Officer atau Steering Committee.",
+                    "Contoh pelanggaran: sudah mendapatkan punishment sedang dan masih melakukan pelanggaran."
+                ],
+                "khusus": [
+                    "Dilaporkan langsung ke pihak kampus.",
+                    "Contoh pelanggaran: membawa atau mengedarkan obat-obatan terlarang, minuman keras, serta barang yang berbau pornografi, datang ke kampus dalam keadaan dibawah pengaruh minuman beralkohol dan obat-obatan terlarang."
+                ]
+            },
+            "atribut_perlengkapan": {
+                "day_1": {
+                    "individu": [
+                        "Makanan: snack level up, snack zero panggang, air pegunungan, putih salju, bola kuning, kotak garing rasa ayam.",
+                        "ATK",
+                        "Topi rimba (warna navy)",
+                        "Name tag",
+                        "Buku passport",
+                        "Kantung kresek (untuk sepatu)",
+                        "Sandal",
+                        "Alat salat",
+                        "Kartu asuransi kesehatan (BPJS)",
+                        "Tumbler atau tempat minum"
+                    ],
+                    "kompi": [
+                        "Trash bag"
+                    ]
+                },
+                "last_day": {
+                    "individu": [
+                        "ATK",
+                        "Topi rimba (warna navy)",
+                        "Name tag",
+                        "Buku passport",
+                        "Kantung kresek (untuk sepatu)",
+                        "Sandal",
+                        "Alat salat",
+                        "Kartu asuransi kesehatan (BPJS)",
+                        "Tumbler atau tempat minum"
+                    ],
+                    "kompi": [
+                        "Trash bag"
+                    ]
+                }
+            },
+            "tugas": {
+                "pra_ormik": {
+                    "individu": [
+                        "Membuat name tag berbentuk siluet Zeroo, template: [NAMETAG] EXPLORERS of ORMIK EXPLORE 2025.docx, dilaminating dan menggunakan kertas ukuran A4, berisi: nama kompi, logo kompi, nama, foto (3x4), Prodi, asal daerah, motto hidup, tali name tag berwarna sesuai Prodi (SI=Oren, TI=Biru tua, BD=Merah).",
+                        "Mengunggah twibbon ke Instagram, template: http://twibbo.nz/explorers-oe25, wajib First Account, tag / mention IG @ormikxplore, @sttnf_official, dan Mentor masing-masing, kirimkan link postingan ke GForm penugasan.",
+                        "Membuat Video Perkenalan, ketentuan: menggunakan kemeja putih dan bawahan hitam, profil diri (nama lengkap, nama panggilan, kompi, prodi, domisili), fun Fact diri sendiri, hobi, alasan pilih Prodi, 'Kalau kamu adalah seorang penjelajah, kamu mau menjelajahi apa?', tambahan kalimat akhir video: '(Nama kamu) siap terbang bersama ORMIK Explore 2025! Start from Zero Go To Heroo!', frame video perkenalan: [OE25] FRAME EXPLORER INTRODUCE.png, unggah video di reels instagram first account masing-masing lalu tag IG @sttnf_official, @ormikxplore, serta Mentor masing-masing, kirimkan link video ke GForm penugasan.",
+                        "Wajib menghafalkan lagu: Hymne STT NF, Mars STT NF. Notes: Buat video lalu kirimkan link video (GDrive) ke GForm penugasan."
+                    ],
+                    "kompi": [
+                        "Membuat akun Instagram kompi.",
+                        "Membuat logo kompi.",
+                        "Membuat yel-yel.",
+                        "Mempersiapkan bakat yang akan ditampilkan saat last day ORMIK.",
+                        "Membuat buku passport: Passport merupakan buku kecil yang wajib dimiliki oleh setiap mentee selama kegiatan ORMIK berlangsung. Passport ini berfungsi sebagai identitas, catatan perjalanan kegiatan, sekaligus bukti kehadiran dan partisipasi mentee. Desain passport dibuat sama setiap kompi. Isi utama buku: Halaman biografi peserta, lirik yel-yel kelompok, tabel penugasan perhari juga kesesuaian dresscode, dan kolom untuk TTD Panitia ORMIK. Ukuran buku passport A5 : 2. Referensi: https://youtube.com/shorts/t0jyYoVfUao?si=-v-VeuzCJ4kMoaUz, https://youtube.com/shorts/-xNlG-QLF6c?si=LdUNvk_9fEzgmwJl, https://pin.it/42Ylcu8Ke"
+                    ]
+                },
+                "day_1": {
+                    "individu": [
+                        "Membuat resume materi day 1."
+                    ],
+                    "kompi": [
+                        "Membuat video yel-yel dan upload di IG kompi masing-masing.",
+                        "Dokumentasi setelah selesai ORMIK day 1 dan upload di IG kompi masing-masing.",
+                        "Membuat konten video edukasi sekreatif mungkin dengan tema: Teknologi (tema setiap kompi harus berbeda-beda). Pengerjaan tugas ini boleh dikerjakan sebelum ORMIK day 1. Notes: Teknis pengumpulan seluruh tugas di link GForm penugasan."
+                    ]
+                },
+                "last_day": {
+                    "individu": [
+                        "Memberikan satu mini gift kepada Mentor masing-masing.",
+                        "Membuat dua surat yang dibentuk pesawat untuk diberikan ke Mentor masing-masing dan salah satu panitia ormik."
+                    ],
+                    "kompi": [
+                        "Menampilkan unjuk bakat kolaborasi dua kompi yang dibimbing oleh satu Mentor."
+                    ]
+                }
+            }
+        }
 
-    # === Public API ===
+    # Fungsi untuk mengambil informasi ORMIK
+    def get_ormik_info(self, category, subcategory=None, day=None):
+        try:
+            if day:
+                return self.ormik_data[category][day][subcategory]
+            elif subcategory:
+                return self.ormik_data[category][subcategory]
+            else:
+                return self.ormik_data[category]
+        except KeyError:
+            return "Data tidak ditemukan."
     def reply(self, user_input: str) -> ChatResponse:
         topic_ok = self._is_on_topic(user_input)
         if not topic_ok:
@@ -61,64 +242,42 @@ class ZEEROAgent:
     # (internal header removed to avoid exposing base prompt)
 
     def _get_keyword_based_response(self, user_input: str) -> str:
+        s = user_input.lower()
         if self._has_keyword(s, ["hak"]):
+            hak_list = self.get_ormik_info("hak_peserta")
             return (
-                "🎓 **Hak Peserta ORMIK 2025:**\n"
-                "1. Mengeluarkan pendapat, baik secara lisan maupun tulisan.\n"
-                "2. Memperoleh perlakuan yang adil dan layak berdasarkan nilai-nilai kemanusiaan.\n"
-                "3. Mendapat pembelaan dari panitia apabila diperlakukan secara tidak adil.\n"
-                "4. Mendapat informasi yang jelas tentang jadwal kegiatan dan segala yang berkaitan dengan kegiatan ORMIK STT NF.\n"
-                "5. Mendapatkan materi ORMIK STT NF.\n"
-                "6. Mendapatkan sertifikat bagi yang mengikuti seluruh rangkaian kegiatan ORMIK STT NF, sesuai dengan ketentuan panitia pelaksana.\n"
-                "7. Melaporkan segala tindakan panitia yang melanggar nilai kemanusiaan dan merugikan STT NF."
+                "🎓 **Hak Peserta ORMIK 2025:**\n" +
+                "\n".join([f"{i+1}. {item}" for i, item in enumerate(hak_list)])
             )
         if self._has_keyword(s, ["kewajiban"]):
+            kewajiban_list = self.get_ormik_info("kewajiban_peserta")
             return (
-                "📘 **Kewajiban Peserta ORMIK 2025:**\n"
-                "1. Mengikuti seluruh rangkaian kegiatan ORMIK STT NF atau yang telah dijadwalkan oleh panitia pelaksana.\n"
-                "2. Wajib menjaga nama baik STT Terpadu Nurul Fikri dan IM STT NF.\n"
-                "3. Menaati segala ketentuan yang telah ditetapkan oleh panitia pelaksana."
+                "📘 **Kewajiban Peserta ORMIK 2025:**\n" +
+                "\n".join([f"{i+1}. {item}" for i, item in enumerate(kewajiban_list)])
             )
         if self._has_keyword(s, ["ketentuan"]) and ("putra" in s):
+            putra_list = self.get_ormik_info("ketentuan_peserta", "putra")
             return (
-                "👕 **Ketentuan Peserta Putra ORMIK 2025:**\n"
-                "1. Pakaian bersih, rapi, dan sopan.\n"
-                "2. Baju dimasukkan.\n"
-                "3. Lengan tidak digulung.\n"
-                "4. Tidak ketat.\n"
-                "5. Menggunakan ikat pinggang hitam.\n"
-                "6. Menggunakan kaos kaki berwarna putih diatas mata kaki.\n"
-                "7. Rambut tidak dicat dan rapi (disisir, tidak menutupi mata, yang panjang diikat rapi).\n"
-                "8. Menggunakan sepatu berwarna dominan hitam.\n"
-                "9. Kuku bersih dan tidak panjang.\n"
-                "10. Dilarang menggunakan aksesori (jaket, gelang/kalung, topi kecuali jam tangan).\n"
-                "11. Dilarang membawa barang terlarang (narkoba, minuman keras/alkohol, rokok/vape, senjata tajam/alat berbahaya)."
+                "👕 **Ketentuan Peserta Putra ORMIK 2025:**\n" +
+                "\n".join([f"{i+1}. {item}" for i, item in enumerate(putra_list)]) +
+                "\n\nApakah Anda ingin tahu juga ketentuan peserta putri?"
             )
         if self._has_keyword(s, ["ketentuan"]) and ("putri" in s):
+            putri_list = self.get_ormik_info("ketentuan_peserta", "putri")
             return (
-                "👗 **Ketentuan Peserta Putri ORMIK 2025:**\n"
-                "1. Pakaian bersih, rapi, dan sopan.\n"
-                "2. Mengenakan pakaian yang longgar, tidak transparan, dan tidak memperlihatkan lekuk tubuh.\n"
-                "3. Baju tidak dimasukkan (dikeluarkan).\n"
-                "4. Pakaian tidak ketat.\n"
-                "5. Lengan baju tidak digulung.\n"
-                "6. Wajib mengenakan rok bahan (bukan rok span) dengan panjang hingga mata kaki.\n"
-                "7. Menggunakan kaos kaki berwarna putih di atas mata kaki.\n"
-                "8. Rambut tidak dicat dan rapi. Muslim: jilbab segiempat (bukan instan) + ciput. Non-Muslim: rambut panjang diikat rapi.\n"
-                "9. Menggunakan sepatu berwarna dominan hitam.\n"
-                "10. Kuku bersih, tidak panjang, dan tidak diwarnai.\n"
-                "11. Dilarang memakai riasan (make up) berlebihan.\n"
-                "12. Tidak diperkenankan menggunakan kontak lensa (softlens) berwarna.\n"
-                "13. Dilarang menggunakan aksesori (jaket, gelang/kalung, topi kecuali jam tangan).\n"
-                "14. Dilarang membawa barang terlarang (narkoba, minuman keras/alkohol, rokok/vape, senjata tajam/alat berbahaya)."
+                "👗 **Ketentuan Peserta Putri ORMIK 2025:**\n" +
+                "\n".join([f"{i+1}. {item}" for i, item in enumerate(putri_list)]) +
+                "\n\nApakah Anda ingin tahu juga ketentuan peserta putra?"
             )
         if self._has_keyword(s, ["perizinan", "izin"]):
+            izin_saat = self.get_ormik_info("perizinan", "saat_ormik")
+            izin_tidak = self.get_ormik_info("perizinan", "tidak_mengikuti")
             return (
-                "📝 **Perizinan ORMIK 2025:**\n"
-                "1. Izin saat acara: langsung ke Tim Kedisiplinan atau Mentor di ruangan, berikan alasan jelas (misal: ke toilet, cuci muka, dll).\n"
-                "2. Izin tidak mengikuti ORMIK: buat surat izin dan kirim via WhatsApp ke Mentor masing-masing, H-1 (maksimal 23.59 WIB) sebelum acara.\n"
-                "   Sertakan bukti otentik (misal: surat keterangan sakit).\n"
-                "   Format: Nama - Kompi - Alasan izin - Bukti otentik."
+                "📝 **Perizinan ORMIK 2025:**\n\n"
+                "**Saat ORMIK berlangsung:**\n" +
+                "\n".join([f"• {item}" for item in izin_saat]) +
+                "\n\n**Izin tidak mengikuti ORMIK:**\n" +
+                "\n".join([f"• {item}" for item in izin_tidak])
             )
         if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
             return (
@@ -132,16 +291,29 @@ class ZEEROAgent:
                 "**Per Kompi:** Trash bag"
             )
         if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]):
-            return (
-                "📝 **Tugas ORMIK 2025:**\n\n"
-                "**Pra ORMIK:**\n"
-                "Individu:\n1. Name tag siluet Zeroo (A4 laminating, isi: nama kompi, logo, nama, foto 3x4, Prodi, asal daerah, motto hidup, tali sesuai Prodi).\n2. Twibbon IG (template, tag @ormikxplore, @sttnf_official, Mentor, kirim link ke GForm).\n3. Video perkenalan (kemeja putih, bawahan hitam, profil, fun fact, hobi, alasan pilih Prodi, kalimat siap terbang, frame khusus, upload reels IG, tag, kirim link ke GForm).\n4. Hafal Hymne & Mars STT NF (buat video, kirim link ke GForm).\n"
-                "Kompi:\n1. Akun IG kompi\n2. Logo kompi\n3. Yel-yel\n4. Persiapan bakat untuk last day\n5. Buku passport (A5, isi: biografi, yel-yel, tabel tugas, dresscode, TTD panitia, referensi YouTube/Pin).\n"
-                "**Day 1:**\nIndividu: Resume materi day 1.\nKompi: Video yel-yel (upload IG kompi), dokumentasi (upload IG kompi), konten video edukasi tema teknologi (beda tiap kompi, boleh sebelum day 1, upload ke GForm).\n"
-                "**Last Day:**\nIndividu: Mini gift untuk Mentor, dua surat pesawat untuk Mentor dan panitia.\nKompi: Unjuk bakat kolaborasi dua kompi di bawah satu Mentor.\n"
-                "Ingin tahu detail tugas untuk hari tertentu? Tanyakan misal: 'Tugas Day 1', 'Tugas Pra ORMIK', atau 'Tugas Last Day'."
-            )
-        s = user_input.lower()
+            if "pra" in s or "ormik" in s:
+                individu = self.get_ormik_info("tugas", "individu", "pra_ormik")
+                kompi = self.get_ormik_info("tugas", "kompi", "pra_ormik")
+                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(kompi)])
+                return response + "\n\nApakah Anda ingin tahu juga tugas di Day 1 atau Last Day?"
+            elif "day 1" in s or "day1" in s:
+                individu = self.get_ormik_info("tugas", "individu", "day_1")
+                kompi = self.get_ormik_info("tugas", "kompi", "day_1")
+                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(kompi)])
+                return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Last Day?"
+            elif "last" in s or "akhir" in s:
+                individu = self.get_ormik_info("tugas", "individu", "last_day")
+                kompi = self.get_ormik_info("tugas", "kompi", "last_day")
+                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{i+1}. {item}" for i, item in enumerate(kompi)])
+                return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Day 1?"
+            else:
+                return (
+                    "📝 **Tugas ORMIK 2025:**\n\n"
+                    "**Pra ORMIK:** Name tag, twibbon IG, video perkenalan, hafal Hymne & Mars (individu); akun IG kompi, logo, yel-yel, passport (kompi).\n"
+                    "**Day 1:** Resume materi (individu); video yel-yel, dokumentasi, video edukasi teknologi (kompi).\n"
+                    "**Last Day:** Mini gift & surat pesawat (individu); unjuk bakat kolaborasi (kompi).\n\n"
+                    "Ingin tahu detail tugas untuk hari tertentu? Tanyakan misal: 'Tugas Day 1', 'Tugas Pra ORMIK', atau 'Tugas Last Day'."
+                )
 
         # Greetings/intro
         if self._has_keyword(s, ["halo", "hai", "hello", "zeero", "siapa"]):
@@ -213,44 +385,58 @@ class ZEEROAgent:
             )
 
         if self._has_keyword(s, ["tata tertib", "peraturan", "tertib"]):
+            tertib_list = self.get_ormik_info("tata_tertib")
             return (
-                "📋 **Tata Tertib Peserta ORMIK 2025:**\n"
-                "1. Peserta wajib menjaga nama baik Almamater STT Terpadu Nurul Fikri.\n"
-                "2. Peserta wajib datang tepat waktu pada pukul 06.30 WIB.\n"
-                "3. Peserta wajib mengikuti seluruh rangkaian ORMIK dan wajib izin apabila tidak bisa mengikuti atau meninggalkan serangkaian acara ORMIK.\n"
-                "4. Peserta wajib menghormati dan menghargai panitia maupun sesama peserta ORMIK.\n"
-                "5. Peserta wajib menjaga sikap, perilaku, dan tidak boleh gaduh selama acara berlangsung.\n"
-                "6. Peserta wajib menerapkan 6S (Senyum, Salam, Sapa, Sopan, Santun, dan Semangat) kepada siapapun.\n"
-                "7. Peserta wajib mengisi semua presensi yang disediakan oleh panitia.\n"
-                "8. Peserta wajib menggunakan pakaian yang telah ditentukan panitia dari hari pertama hingga akhir.\n"
-                "9. Peserta tidak boleh meninggalkan ruang kelas tanpa seizin Tim Kedisiplinan dan Mentor.\n"
-                "10. Peserta wajib memakai atribut yang sesuai dengan yang sudah ditentukan.\n"
-                "11. Peserta wajib membawa dan melaksanakan penugasan yang diberikan dengan sebaik-baiknya dan penuh tanggung jawab.\n"
-                "12. Dilarang membawa senjata tajam dan senjata api.\n"
-                "13. Dilarang membawa, mengedarkan, dan menggunakan rokok, rokok elektrik (vape), obat-obatan terlarang, minuman keras, serta barang yang berbau pornografi.\n"
-                "14. Dilarang mengikuti rangkaian acara ORMIK dalam keadaan di bawah pengaruh minuman beralkohol dan obat-obatan terlarang.\n"
-                "15. Dilarang melakukan kontak fisik dengan lawan jenis, baik peserta maupun panitia ORMIK.\n"
-                "16. Dilarang menggunakan smartphone selama acara berlangsung, kecuali jika telah mendapatkan izin dari Mentor dan Tim Kedisiplinan.\n"
-                "17. Dilarang menggunakan kalimat atau perkataan yang merendahkan pihak lain.\n"
-                "18. Dilarang memakai perhiasan, make up berlebihan, tindik, bertato, dan rambut berwarna."
+                "📋 **Tata Tertib Peserta ORMIK 2025:**\n" +
+                "\n".join([f"{i+1}. {item}" for i, item in enumerate(tertib_list)])
             )
 
         if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran"]):
-            return (
-                "⚖️ **Punishment ORMIK 2025:**\n"
-                "• Ringan: Memungut 10 sampah di area kampus. (Pelanggaran 1x)\n"
-                "• Sedang: Menyanyikan Mars STT NF & surat permintaan maaf (15 tanda tangan panitia). (Pelanggaran 2x)\n"
-                "• Berat: Evaluasi langsung oleh Project Officer/Steering Committee. (Setelah punishment sedang, masih melanggar)\n"
-                "• Khusus: Dilaporkan ke pihak kampus. (Contoh: narkoba, minuman keras, pornografi, datang dalam pengaruh alkohol/obat, pelecehan seksual)"
-            )
+            if "ringan" in s:
+                ringan = self.get_ormik_info("punishment", "ringan")
+                response = "⚖️ **Punishment Ringan ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in ringan])
+                return response + "\n\nApakah Anda ingin tahu juga punishment sedang, berat, atau khusus?"
+            elif "sedang" in s:
+                sedang = self.get_ormik_info("punishment", "sedang")
+                response = "⚖️ **Punishment Sedang ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in sedang])
+                return response + "\n\nApakah Anda ingin tahu juga punishment ringan, berat, atau khusus?"
+            elif "berat" in s:
+                berat = self.get_ormik_info("punishment", "berat")
+                response = "⚖️ **Punishment Berat ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in berat])
+                return response + "\n\nApakah Anda ingin tahu juga punishment ringan, sedang, atau khusus?"
+            elif "khusus" in s:
+                khusus = self.get_ormik_info("punishment", "khusus")
+                response = "⚖️ **Punishment Khusus ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in khusus])
+                return response + "\n\nApakah Anda ingin tahu juga punishment ringan, sedang, atau berat?"
+            else:
+                return (
+                    "⚖️ **Punishment ORMIK 2025:**\n"
+                    "• Ringan: Memungut 10 sampah di area kampus. (Pelanggaran 1x)\n"
+                    "• Sedang: Menyanyikan Mars STT NF & surat permintaan maaf (15 tanda tangan panitia). (Pelanggaran 2x)\n"
+                    "• Berat: Evaluasi langsung oleh Project Officer/Steering Committee. (Setelah punishment sedang, masih melanggar)\n"
+                    "• Khusus: Dilaporkan ke pihak kampus. (Contoh: narkoba, minuman keras, pornografi, datang dalam pengaruh alkohol/obat, pelecehan seksual)\n\n"
+                    "Ingin tahu detail punishment tertentu? Tanyakan misal: 'Punishment ringan' atau 'Punishment khusus'."
+                )
 
         if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu"]):
-            return (
-                "🎒 **Atribut & Perlengkapan:**\n\n"
-                "**Day 1:** ATK, topi rimba navy, name tag, passport, kresek sepatu, sandal, alat salat, BPJS, tumbler, snack.\n"
-                "**Last Day:** Item serupa + konsumsi sesuai panduan.\n"
-                "**Per Kompi:** Trash bag."
-            )
+            if "day 1" in s or "day1" in s:
+                individu = self.get_ormik_info("atribut_perlengkapan", "individu", "day_1")
+                kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "day_1")
+                response = "🎒 **Atribut & Perlengkapan Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"• {item}" for item in individu]) + "\n\n**Kompi:**\n" + "\n".join([f"• {item}" for item in kompi])
+                return response + "\n\nApakah Anda ingin tahu juga atribut di Last Day?"
+            elif "last" in s or "akhir" in s:
+                individu = self.get_ormik_info("atribut_perlengkapan", "individu", "last_day")
+                kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "last_day")
+                response = "🎒 **Atribut & Perlengkapan Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"• {item}" for item in individu]) + "\n\n**Kompi:**\n" + "\n".join([f"• {item}" for item in kompi])
+                return response + "\n\nApakah Anda ingin tahu juga atribut di Day 1?"
+            else:
+                return (
+                    "🎒 **Atribut & Perlengkapan ORMIK 2025:**\n\n"
+                    "**Day 1 (Individu):** Makanan (snack level up, dll), ATK, topi rimba navy, name tag, passport, kresek sepatu, sandal, alat salat, BPJS, tumbler.\n"
+                    "**Per Kompi:** Trash bag.\n"
+                    "**Last Day:** Item serupa + konsumsi sesuai panduan.\n\n"
+                    "Ingin tahu detail atribut untuk hari tertentu? Tanyakan misal: 'Atribut Day 1' atau 'Atribut Last Day'."
+                )
 
         if self._has_keyword(s, ["tugas", "assignment", "kerjaan"]):
             return (
@@ -306,11 +492,9 @@ class ZEEROAgent:
         return {
             "ormikData": {
                 "schedule": [
-                    {"id": "pra-ormik", "title": "PRA ORMIK", "date": "Senin, Sept 8, 2025", "fullDate": "2025-09-08"},
-                    {"id": "day-1", "title": "DAY 1", "date": "Selasa, Sept 16, 2025", "fullDate": "2025-09-16"},
-                    {"id": "day-2", "title": "DAY 2", "date": "Rabu, Sept 17, 2025", "fullDate": "2025-09-17"},
-                    {"id": "day-3", "title": "DAY 3", "date": "Kamis, Sept 18, 2025", "fullDate": "2025-09-18"},
-                    {"id": "last-day", "title": "LAST DAY", "date": "Sabtu, Sept 20, 2025", "fullDate": "2025-09-20"}
+                    {"id": "pra-ormik", "title": "PRA ORMIK", "date": "Senin, 8 September 2025", "fullDate": "2025-09-08"},
+                    {"id": "day-1", "title": "DAY 1", "date": "Selasa, 16 September 2025", "fullDate": "2025-09-16"},
+                    {"id": "last-day", "title": "LAST DAY", "date": "Sabtu, 20 September 2025", "fullDate": "2025-09-20"}
                 ],
                 "contact": {
                     "instagram": "https://www.instagram.com/ormikxplore/",

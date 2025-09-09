@@ -3,13 +3,13 @@
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 6969
 ```
 
 
 ## Test
 ```bash
-curl -s -X POST http://localhost:8000/v1/chat \
+curl -s -X POST https://supreme-spork-6p9q4grq54vhxrv4-6969.app.github.dev/v1/chat \
 -H 'Content-Type: application/json' \
 -d '{"query":"Apa jadwal ORMIK?"}' | jq
 ```
