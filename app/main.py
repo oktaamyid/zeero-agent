@@ -35,6 +35,83 @@ class ZEEROAgent:
                 "tahun": "2025",
                 "visi": "ORMIK EXPLORE 2025 memiliki visi menjadi titik mulai eksplorasi mahasiswa baru STT-NF dalam membangun semangat akademik, budaya positif, dan kesiapan diri di era modern."
             },
+            "divisi": {
+                "steering_committee": {
+                    "name": "Steering Committee",
+                    "position": "STEERING COMMITTEE",
+                    "description": "Steering Committee bertanggung jawab mengendalikan seluruh proses kegiatan, mulai dari tahap perencanaan hingga evaluasi akhir, guna memastikan kegiatan berjalan sesuai tujuan dan harapan."
+                },
+                "project_officer": {
+                    "name": "Project Officer",
+                    "position": "PROJECT OFFICER", 
+                    "description": "Individu yang memegang tanggung jawab penuh atas pelaksanaan kegiatan ORMIK. Project Officer bertugas mengawasi secara langsung seluruh elemen di bawahnya, antara lain Sekretaris, Bendahara, dan divisi-divisi lainnya."
+                },
+                "sekretaris": {
+                    "name": "Sekretaris",
+                    "position": "SEKRETARIS",
+                    "description": "Membantu Project officer dalam menjalankan fungsi administrasi, dengan tanggung jawab utama meliputi pengelolaan dokumen, surat-menyurat, proposal, serta pembuatan notulen rapat."
+                },
+                "bendahara": {
+                    "name": "Bendahara", 
+                    "position": "BENDAHARA",
+                    "description": "Bendahara bertugas untuk menyusun rencana anggaran, mencatat transaksi keuangan, dan membuat laporan pertanggungjawaban keuangan, serta berkoordinasi dengan pihak Kemahasiswaan terkait dana kegiatan."
+                },
+                "public_relation": {
+                    "name": "Public Relation",
+                    "position": "PUBLIC RELATION",
+                    "description": "Bertanggung jawab untuk mengelola komunikasi, membangun citra positif, serta menjalin hubungan antara ORMIK dengan eksternal di lingkup STT NF."
+                },
+                "liaison_officer": {
+                    "name": "Liaison Officer",
+                    "position": "LIAISON OFFICER", 
+                    "description": "Divisi ini akan berkomunikasi dengan publik eksternal maupun internal kampus. LO juga bertindak sebagai contact person bagi pihak internal maupun eksternal. Serta membantu briefing pihak internal maupun eksternal."
+                },
+                "event": {
+                    "name": "Event",
+                    "position": "EVENT",
+                    "description": "Bertanggung jawab atas perencanaan, koordinasi, dan pelaksanaan seluruh rangkaian acara ORMIK, termasuk acara puncak."
+                },
+                "media": {
+                    "name": "Media",
+                    "position": "MEDIA",
+                    "description": "Bertugas untuk memproduksi, mengelola, dan mengabadikan seluruh momen kegiatan ORMIK dalam bentuk dokumentasi serta memastikan seluruh kebutuhan visual dan desain terpenuhi."
+                },
+                "kreatif": {
+                    "name": "Kreatif",
+                    "position": "KREATIF",
+                    "description": "Divisi Kreatif bertugas menciptakan suasana acara yang menarik, interaktif, dan berkesan melalui berbagai elemen hiburan, visual, dan partisipatif."
+                },
+                "kedisiplinan": {
+                    "name": "Kedisiplinan",
+                    "position": "KEDISIPLINAN",
+                    "description": "Bertugas memastikan seluruh rangkaian kegiatan ORMIK berjalan dengan tertib, tepat waktu, dan sesuai aturan yang telah ditetapkan."
+                },
+                "mentor": {
+                    "name": "Mentor",
+                    "position": "MENTOR",
+                    "description": "Bertugas untuk membimbing, mengarahkan, mendampingi, dan memberikan dukungan kepada peserta ORMIK selama kegiatan berlangsung."
+                },
+                "logistik": {
+                    "name": "Logistik",
+                    "position": "LOGISTIK",
+                    "description": "Bertanggung jawab untuk mengatur seluruh kebutuhan perlengkapan, peralatan, dan sarana prasarana yang diperlukan dalam mendukung kelancaran kegiatan ORMIK."
+                },
+                "konsumsi": {
+                    "name": "Konsumsi",
+                    "position": "KONSUMSI",
+                    "description": "Bertugas untuk menyiapkan menu makanan, camilan, serta menjadwalkan waktu makan selama kegiatan ORMIK. Divisi ini juga harus mampu mengatur persediaan makanan dengan cermat untuk memastikan kelancaran acara."
+                },
+                "medis": {
+                    "name": "Medis",
+                    "position": "MEDIS",
+                    "description": "Bertugas untuk memastikan keselamatan dan kesehatan seluruh peserta dan panitia selama kegiatan ORMIK berlangsung."
+                },
+                "it_support": {
+                    "name": "IT Support",
+                    "position": "IT SUPPORT",
+                    "description": "Fokus utama divisi ini mencakup instalasi perangkat, live streaming, serta pengawasan terhadap tiga objek utama, komputer, software, dan sistem jaringan (network)."
+                }
+            },
             "tata_tertib": [
                 "Peserta wajib menjaga nama baik Almamater STT Terpadu Nurul Fikri.",
                 "Peserta wajib datang tepat waktu pada pukul 06.30 WIB.",
@@ -238,7 +315,7 @@ class ZEEROAgent:
             "guidebook", "guide book", "buku panduan", "rundown", "download", "unduh",
             "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
             "jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari",
-            "divisi", "organisasi", "panitia",
+            "divisi", "organisasi", "panitia", "steering", "project officer", "po", "sekretaris", "bendahara", "public relation", "pr", "liaison", "lo", "event", "media", "kreatif", "kedisiplinan", "kedis", "mentor", "logistik", "konsumsi", "konsum", "medis", "it support", "it",
             "lokasi", "kampus", "alamat", "fasilitas", "dimana", "di mana",
             "kontak", "instagram", "hubungi",
             "tips", "persiapan", "panduan", "dress", "pakaian", "seragam", "outfit",
@@ -387,13 +464,62 @@ class ZEEROAgent:
             )
 
         if intent == "divisi":
+            # Check if user is asking for specific division
+            s_lower = s.lower()
+            
+            # Check for specific division keywords
+            division_keywords = {
+                "steering": "steering_committee",
+                "project officer": "project_officer",
+                "po": "project_officer",
+                "sekretaris": "sekretaris",
+                "bendahara": "bendahara",
+                "public relation": "public_relation",
+                "pr": "public_relation",
+                "liaison": "liaison_officer",
+                "lo": "liaison_officer",
+                "event": "event",
+                "media": "media",
+                "kreatif": "kreatif",
+                "kedisiplinan": "kedisiplinan",
+                "kedis": "kedisiplinan",
+                "mentor": "mentor",
+                "logistik": "logistik",
+                "konsumsi": "konsumsi",
+                "konsum": "konsumsi",
+                "medis": "medis",
+                "it support": "it_support",
+                "it": "it_support"
+            }
+            
+            # Find specific division being asked
+            specific_division = None
+            for keyword, division_key in division_keywords.items():
+                if keyword in s_lower:
+                    specific_division = division_key
+                    break
+            
+            # If specific division is asked, show detailed info
+            if specific_division:
+                div_info = self.get_ormik_info("divisi", specific_division)
+                return (
+                    f"👥 **{div_info['position']} - ORMIK 2025**\n\n"
+                    f"**📋 Deskripsi Tugas:**\n"
+                    f"{div_info['description']}\n\n"
+                    "Ingin tahu tentang divisi lain? Tanyakan nama divisinya!\n\n"
+                    "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau kontak panitia?"
+                )
+            
+            # If general question, show overview
             return (
                 "👥 **Struktur Organisasi ORMIK 2025:**\n\n"
                 "**🏆 Core Team:**\n"
-                "• Project Officer (PO)\n• Sekretaris\n• Bendahara\n• Liaison Officer (LO)\n\n"
+                "• Steering Committee\n• Project Officer (PO)\n• Sekretaris\n• Bendahara\n• Public Relation (PR)\n• Liaison Officer (LO)\n\n"
                 "**⚡ Divisi Operasional:**\n"
                 "• Event\n• Media\n• Kreatif\n• Kedisiplinan\n• Mentor\n• Logistik\n• Konsumsi\n• Medis\n• IT Support\n\n"
-                "Ingin tahu detail divisi tertentu? Tanya aja! 🌟\n\n"
+                "💡 **Ingin tahu detail divisi tertentu?**\n"
+                "Tanyakan dengan menyebut nama divisinya, contoh:\n"
+                "• 'Divisi Event'\n• 'Tugas Media'\n• 'Apa itu Mentor?'\n\n"
                 "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau lokasi kampus?"
             )
 
@@ -558,7 +684,7 @@ class ZEEROAgent:
         intents = {
             "greetings": ["halo", "hai", "hello", "zeero apa", "siapa kamu", "kamu siapa"],
             "jadwal": ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"],
-            "divisi": ["divisi", "struktur", "organisasi", "tim"],
+            "divisi": ["divisi", "struktur", "organisasi", "tim", "steering", "project officer", "po", "sekretaris", "bendahara", "public relation", "pr", "liaison", "lo", "event", "media", "kreatif", "kedisiplinan", "kedis", "mentor", "logistik", "konsumsi", "konsum", "medis", "it support", "it"],
             "lokasi": ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"],
             "kontak": ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"],
             "tips": ["tips", "saran", "panduan", "cara", "bagaimana"],
