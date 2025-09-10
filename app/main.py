@@ -297,17 +297,17 @@ class ZEEROAgent:
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("tugas", "individu", "day_1")
                 kompi = self.get_ormik_info("tugas", "kompi", "day_1")
-                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Last Day?"
             elif "last" in s or "akhir" in s:
                 individu = self.get_ormik_info("tugas", "individu", "last_day")
                 kompi = self.get_ormik_info("tugas", "kompi", "last_day")
-                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Day 1?"
             elif "pra" in s or "ormik" in s:
                 individu = self.get_ormik_info("tugas", "individu", "pra_ormik")
                 kompi = self.get_ormik_info("tugas", "kompi", "pra_ormik")
-                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx+1}. {item}" for item in kompi])
+                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
                 return response + "\n\nApakah Anda ingin tahu juga tugas di Day 1 atau Last Day?"
             else:
                 return (
@@ -362,7 +362,7 @@ class ZEEROAgent:
                 f"📍 {k['alamat']}, {k['kota']}, {k['provinsi']}\n\n"
                 "🗺️ **Fasilitas:** Auditorium, ruang kelas ber-AC, lab komputer, Masjid Al-Hikmah, kantin, area parkir.\n\n"
                 "🚌 **Akses:** TransJakarta (Lenteng Agung), KRL (Stasiun Lenteng Agung), angkot Pasar Minggu–Bogor.\n"
-                f"📍 Google Maps: \"{k['nama']}\"\n\n"
+                f"📍 **Google Maps:** {k['maps_url']}\n\n"
                 "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau kontak panitia?"
             )
 
@@ -557,7 +557,8 @@ class ZEEROAgent:
                     "hotline": "021-7863191",
                     "whatsapp": "0857-1624-3174",
                     "email": "info@nurulfikri.ac.id",
-                    "website": "https://nurulfikri.ac.id"
+                    "website": "https://nurulfikri.ac.id",
+                    "maps_url": "https://maps.app.goo.gl/jnG4mhZV8QJDLdbNA"
                 }
             }
         }
