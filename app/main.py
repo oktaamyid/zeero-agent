@@ -235,6 +235,7 @@ class ZEEROAgent:
         s = user_input.lower()
         allow = [
             "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik",
+            "guidebook", "guide book", "buku panduan", "rundown", "download", "unduh",
             "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
             "jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari",
             "divisi", "organisasi", "panitia",
@@ -254,6 +255,25 @@ class ZEEROAgent:
     def _get_keyword_based_response(self, user_input: str) -> str:
         s = user_input.lower()
         intent = self._resolve_intent(s)
+        if intent == "guidebook":
+            k = self.context['ormikData']['kampus']
+            return (
+                "📖 **Guidebook ORMIK Explore 2025**\n\n"
+                "**Download Guidebook Lengkap:**\n"
+                f"{k['guidebook_url']}\n\n"
+                "🔗 **Cara Download:**\n"
+                "• Klik link di atas untuk langsung mengunduh guidebook\n"
+                "• File akan otomatis terdownload ke perangkat Anda\n"
+                "• Guidebook berisi rundown lengkap, aturan, dan panduan ORMIK\n\n"
+                "📋 **Isi Guidebook:**\n"
+                "• Jadwal kegiatan detail\n"
+                "• Aturan dan tata tertib\n"
+                "• Dress code dan atribut\n"
+                "• Tugas dan penugasan\n"
+                "• Informasi penting lainnya\n\n"
+                "Pastikan baca guidebook sebelum mengikuti ORMIK ya! 📚\n\n"
+                "Apakah Anda ingin tahu juga tentang jadwal atau tips persiapan?"
+            )
         if intent == "ormik":
             ormik_info = self.get_ormik_info("tentang_ormik")
             return (
@@ -355,12 +375,14 @@ class ZEEROAgent:
 
         if intent == "jadwal":
             lines = [f"• **{x['title']}** - {x['date']}" for x in self.context['ormikData']['schedule']]
+            k = self.context['ormikData']['kampus']
             return (
                 "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n" +
                 "⏰ **Waktu:**\n• Peserta wajib datang tepat waktu pada pukul **06:30 WIB** sesuai tata tertib.\n"
                 "• Registrasi ulang 30 menit sebelumnya\n"
                 "• Pastikan datang tepat waktu ya!\n\n"
-                "📖 **Info Detail:** Unduh guidebook untuk rundown lengkap.\n\n"
+                f"📖 **Guidebook:** Unduh guidebook ORMIK untuk rundown lengkap di: {k['guidebook_url']}\n"
+                "*(Klik link di atas untuk langsung mengunduh guidebook)*\n\n"
                 "Apakah Anda ingin tahu juga tentang lokasi kampus atau tips persiapan?"
             )
 
@@ -405,11 +427,14 @@ class ZEEROAgent:
             )
 
         if intent == "tips":
+            k = self.context['ormikData']['kampus']
             return (
                 "💡 **Tips Sukses ORMIK 2025:**\n\n"
                 "✅ **Sebelum:** Baca guidebook, siapkan dress code, istirahat cukup, cek jadwal, siapkan tas.\n"
                 "✅ **Selama:** Datang tepat waktu pukul 06:30 WIB sesuai tata tertib, aktif, ramah, ikuti arahan mentor, jaga kebersihan.\n"
                 "✅ **Mindset:** Terbuka, berani tanya, nikmati proses. 🌟\n\n"
+                f"📖 **Guidebook:** {k['guidebook_url']}\n"
+                "*(Klik link di atas untuk mengunduh guidebook lengkap)*\n\n"
                 "Apakah Anda ingin tahu juga tentang dress code atau atribut yang perlu dibawa?"
             )
 
@@ -546,6 +571,7 @@ class ZEEROAgent:
             "perizinan": ["perizinan", "izin", "izinan"],
             "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
             "hak": ["hak", "hak peserta"],
+            "guidebook": ["guidebook", "guide book", "buku panduan", "panduan", "rundown", "download", "unduh"],
             "ormik": ["ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "tentang ormik", "pengertian ormik", "definisi ormik"],
         }
         
@@ -564,6 +590,7 @@ class ZEEROAgent:
         # Priority order - more specific intents first
         priority = [
             "greetings",
+            "guidebook",
             "jadwal", 
             "kontak",
             "lokasi", 
@@ -607,7 +634,8 @@ class ZEEROAgent:
                     "email": "info@nurulfikri.ac.id",
                     "website": "https://nurulfikri.ac.id",
                     "maps_url": "https://maps.app.goo.gl/jnG4mhZV8QJDLdbNA",
-                    "youtube": "https://www.youtube.com/@STTNF"
+                    "youtube": "https://www.youtube.com/@STTNF",
+                    "guidebook_url": "https://drive.usercontent.google.com/u/1/uc?id=1dicryzEqjhbPcSGXx02x9t2ULLRTb7oT&export=download"
                 }
             }
         }
