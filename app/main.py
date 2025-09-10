@@ -234,7 +234,7 @@ class ZEEROAgent:
     def _is_on_topic(self, user_input: str) -> bool:
         s = user_input.lower()
         allow = [
-            "ormik", "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik",
+            "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik",
             "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
             "jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari",
             "divisi", "organisasi", "panitia",
@@ -512,52 +512,76 @@ class ZEEROAgent:
         return min(conf, 1.0)
 
     def _has_keyword(self, text: str, keywords: list[str]) -> bool:
-        tokens = re.findall(r"\w+", text.lower())
-        for token in tokens:
-            if get_close_matches(token, keywords, n=1, cutoff=0.8):
+        text_lower = text.lower()
+        
+        # Check for exact phrase matches first
+        for keyword in keywords:
+            if keyword.lower() in text_lower:
                 return True
-        return any(k in text for k in keywords)
+        
+        # For single word keywords, check if they appear as whole words
+        text_words = re.findall(r'\b\w+\b', text_lower)
+        for keyword in keywords:
+            keyword_lower = keyword.lower()
+            # If keyword is a single word, check for exact word match
+            if ' ' not in keyword_lower and keyword_lower in text_words:
+                return True
+                
+        return False
 
     def _resolve_intent(self, text: str) -> str | None:
         intents = {
-            "ormik": ["ormik", "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik"],
-            "hak": ["hak", "hak peserta", "peserta"],
-            "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
-            "ketentuan": ["ketentuan", "putra", "putri", "dress code", "pakaian"],
-            "perizinan": ["perizinan", "izin", "izinan"],
-            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"],
-            "greetings": ["halo", "hai", "hello", "zeero", "siapa"],
+            "greetings": ["halo", "hai", "hello", "zeero apa", "siapa kamu", "kamu siapa"],
             "jadwal": ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"],
-            "divisi": ["divisi", "struktur", "organisasi", "panitia", "tim"],
+            "divisi": ["divisi", "struktur", "organisasi", "tim"],
             "lokasi": ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"],
             "kontak": ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"],
-            "tips": ["tips", "saran", "persiapan", "panduan", "aturan"],
+            "tips": ["tips", "saran", "panduan", "cara", "bagaimana"],
             "dress": ["dress", "pakaian", "baju", "seragam", "outfit"],
-            "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata", "aturan", "atur"],
+            "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata"],
             "punishment": ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa"],
             "atribut": ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa"],
+            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"],
+            "ketentuan": ["ketentuan", "putra", "putri", "dress code"],
+            "perizinan": ["perizinan", "izin", "izinan"],
+            "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
+            "hak": ["hak", "hak peserta"],
+            "ormik": ["ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "tentang ormik", "pengertian ormik", "definisi ormik"],
         }
-        matches = [cat for cat, words in intents.items() if self._has_keyword(text, words)]
+        
+        matches = []
+        for cat, words in intents.items():
+            if self._has_keyword(text, words):
+                matches.append(cat)
+        
         if not matches:
             return None
+        
+        # Handle specific combinations first
+        if "kontak" in matches and "panitia" in text.lower():
+            return "kontak"
+            
+        # Priority order - more specific intents first
         priority = [
-            "ormik",
+            "greetings",
+            "jadwal", 
             "kontak",
-            "jadwal",
+            "lokasi", 
             "divisi",
-            "lokasi",
-            "tugas",
             "tips",
             "dress",
             "tata_tertib",
-            "punishment",
+            "punishment", 
             "atribut",
+            "tugas",
             "ketentuan",
             "perizinan",
             "kewajiban",
             "hak",
-            "greetings",
+            "ormik",  # Put ormik at the end with lowest priority
         ]
+        
+        # Sort matches by priority
         matches.sort(key=lambda c: priority.index(c))
         return matches[0]
 
