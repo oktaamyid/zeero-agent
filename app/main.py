@@ -244,21 +244,22 @@ class ZEEROAgent:
 
     def _get_keyword_based_response(self, user_input: str) -> str:
         s = user_input.lower()
-        if self._has_keyword(s, ["hak", "hak peserta", "peserta"]):
+        intent = self._resolve_intent(s)
+        if intent == "hak":
             hak_list = self.get_ormik_info("hak_peserta")
             return (
                 "🎓 **Hak Peserta ORMIK 2025:**\n" +
                 "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(hak_list)]) +
                 "\n\nApakah Anda ingin tahu juga kewajiban peserta?"
             )
-        if self._has_keyword(s, ["kewajiban", "wajib", "kewajiban peserta"]):
+        if intent == "kewajiban":
             kewajiban_list = self.get_ormik_info("kewajiban_peserta")
             return (
                 "📘 **Kewajiban Peserta ORMIK 2025:**\n" +
                 "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(kewajiban_list)]) +
                 "\n\nApakah Anda ingin tahu juga hak peserta?"
             )
-        if self._has_keyword(s, ["ketentuan", "putra", "putri", "dress code", "pakaian"]):
+        if intent == "ketentuan":
             if "putra" in s:
                 putra_list = self.get_ormik_info("ketentuan_peserta", "putra")
                 return (
@@ -281,7 +282,7 @@ class ZEEROAgent:
                     "**Dilarang:** Aksesori berlebihan, make up berlebih, softlens berwarna.\n\n"
                     "Ingin tahu detail untuk putra atau putri? Tanyakan misal: 'Ketentuan putra'."
                 )
-        if self._has_keyword(s, ["perizinan", "izin", "izinan"]):
+        if intent == "perizinan":
             izin_saat = self.get_ormik_info("perizinan", "saat_ormik")
             izin_tidak = self.get_ormik_info("perizinan", "tidak_mengikuti")
             return (
@@ -292,7 +293,7 @@ class ZEEROAgent:
                 "\n".join([f"• {item}" for item in izin_tidak]) +
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau tata tertib?"
             )
-        if self._has_keyword(s, ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"]):
+        if intent == "tugas":
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("tugas", "individu", "day_1")
                 kompi = self.get_ormik_info("tugas", "kompi", "day_1")
@@ -318,7 +319,7 @@ class ZEEROAgent:
                 )
 
         # Greetings/intro
-        if self._has_keyword(s, ["halo", "hai", "hello", "zeero", "siapa"]):
+        if intent == "greetings":
             return (
                 "Halo! Saya **ZEERO** 🤖, Asisten AI untuk ORMIK Explore 2025!\n\n"
                 "Saya siap bantu info tentang:\n"
@@ -331,7 +332,7 @@ class ZEEROAgent:
                 "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, atau `tips`! 😊"
             )
 
-        if self._has_keyword(s, ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"]):
+        if intent == "jadwal":
             lines = [f"• **{x['title']}** - {x['date']}" for x in self.context['ormikData']['schedule']]
             return (
                 "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n" +
@@ -342,7 +343,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang lokasi kampus atau tips persiapan?"
             )
 
-        if self._has_keyword(s, ["divisi", "struktur", "organisasi", "panitia", "tim"]):
+        if intent == "divisi":
             return (
                 "👥 **Struktur Organisasi ORMIK 2025:**\n\n"
                 "**🏆 Core Team:**\n"
@@ -353,7 +354,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau lokasi kampus?"
             )
 
-        if self._has_keyword(s, ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"]):
+        if intent == "lokasi":
             k = self.context['ormikData']['kampus']
             return (
                 "🏫 **Lokasi Kegiatan ORMIK:**\n\n"
@@ -365,7 +366,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang jadwal kegiatan atau kontak panitia?"
             )
 
-        if self._has_keyword(s, ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"]):
+        if intent == "kontak":
             ig = self.context['ormikData']['contact']
             k = self.context['ormikData']['kampus']
             return (
@@ -381,7 +382,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang lokasi kampus atau jadwal kegiatan?"
             )
 
-        if self._has_keyword(s, ["tips", "saran", "persiapan", "panduan", "aturan"]):
+        if intent == "tips":
             return (
                 "💡 **Tips Sukses ORMIK 2025:**\n\n"
                 "✅ **Sebelum:** Baca guidebook, siapkan dress code, istirahat cukup, cek jadwal, siapkan tas.\n"
@@ -390,7 +391,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang dress code atau atribut yang perlu dibawa?"
             )
 
-        if self._has_keyword(s, ["dress", "pakaian", "baju", "seragam", "outfit"]):
+        if intent == "dress":
             return (
                 "👔 **Dress Code ORMIK 2025:**\n\n"
                 "**Putra:** Kemeja putih (dimasukkan), celana hitam/dongker, ikat pinggang hitam, kaos kaki putih, sepatu hitam. Rambut rapi, tanpa cat.\n"
@@ -399,7 +400,7 @@ class ZEEROAgent:
                 "Apakah Anda ingin tahu juga tentang tips persiapan atau atribut yang perlu dibawa?"
             )
 
-        if self._has_keyword(s, ["tata tertib", "peraturan", "tertib", "tata", "aturan", "atur"]):
+        if intent == "tata_tertib":
             tertib_list = self.get_ormik_info("tata_tertib")
             return (
                 "📋 **Tata Tertib Peserta ORMIK 2025:**\n" +
@@ -407,7 +408,7 @@ class ZEEROAgent:
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau hak peserta?"
             )
 
-        if self._has_keyword(s, ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa"]):
+        if intent == "punishment":
             if "ringan" in s:
                 ringan = self.get_ormik_info("punishment", "ringan")
                 response = "⚖️ **Punishment Ringan ORMIK 2025:**\n" + "\n".join([f"• {item}" for item in ringan])
@@ -434,7 +435,7 @@ class ZEEROAgent:
                     "Ingin tahu detail punishment tertentu? Tanyakan misal: 'Punishment ringan' atau 'Punishment khusus'."
                 )
 
-        if self._has_keyword(s, ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa"]):
+        if intent == "atribut":
             if "day 1" in s or "day1" in s:
                 individu = self.get_ormik_info("atribut_perlengkapan", "individu", "day_1")
                 kompi = self.get_ormik_info("atribut_perlengkapan", "kompi", "day_1")
@@ -494,6 +495,47 @@ class ZEEROAgent:
             if get_close_matches(token, keywords, n=1, cutoff=0.8):
                 return True
         return any(k in text for k in keywords)
+
+    def _resolve_intent(self, text: str) -> str | None:
+        intents = {
+            "hak": ["hak", "hak peserta", "peserta"],
+            "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
+            "ketentuan": ["ketentuan", "putra", "putri", "dress code", "pakaian"],
+            "perizinan": ["perizinan", "izin", "izinan"],
+            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"],
+            "greetings": ["halo", "hai", "hello", "zeero", "siapa"],
+            "jadwal": ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"],
+            "divisi": ["divisi", "struktur", "organisasi", "panitia", "tim"],
+            "lokasi": ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"],
+            "kontak": ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"],
+            "tips": ["tips", "saran", "persiapan", "panduan", "aturan"],
+            "dress": ["dress", "pakaian", "baju", "seragam", "outfit"],
+            "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata", "aturan", "atur"],
+            "punishment": ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa"],
+            "atribut": ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa"],
+        }
+        matches = [cat for cat, words in intents.items() if self._has_keyword(text, words)]
+        if not matches:
+            return None
+        priority = [
+            "kontak",
+            "jadwal",
+            "divisi",
+            "lokasi",
+            "tugas",
+            "tips",
+            "dress",
+            "tata_tertib",
+            "punishment",
+            "atribut",
+            "ketentuan",
+            "perizinan",
+            "kewajiban",
+            "hak",
+            "greetings",
+        ]
+        matches.sort(key=lambda c: priority.index(c))
+        return matches[0]
 
     def _init_context(self) -> Dict[str, Any]:
         return {
