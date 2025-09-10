@@ -27,6 +27,14 @@ class ZEEROAgent:
         
         # Knowledge base ORMIK Explore 2025 STT NF
         self.ormik_data = {
+            "tentang_ormik": {
+                "nama_lengkap": "Orientasi Mahasiswa Baru",
+                "institusi": "Sekolah Tinggi Teknologi Terpadu Nurul Fikri",
+                "deskripsi": "Kegiatan yang bertujuan untuk memperkenalkan mahasiswa baru dengan sistem perkuliahan dan lingkungan kampus.",
+                "nama_acara": "Ormik Explore",
+                "tahun": "2025",
+                "visi": "ORMIK EXPLORE 2025 memiliki visi menjadi titik mulai eksplorasi mahasiswa baru STT-NF dalam membangun semangat akademik, budaya positif, dan kesiapan diri di era modern."
+            },
             "tata_tertib": [
                 "Peserta wajib menjaga nama baik Almamater STT Terpadu Nurul Fikri.",
                 "Peserta wajib datang tepat waktu pada pukul 06.30 WIB.",
@@ -226,7 +234,8 @@ class ZEEROAgent:
     def _is_on_topic(self, user_input: str) -> bool:
         s = user_input.lower()
         allow = [
-            "ormik", "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
+            "ormik", "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik",
+            "stt nurul fikri", "stt nf", "nurul fikri", "zeero",
             "jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari",
             "divisi", "organisasi", "panitia",
             "lokasi", "kampus", "alamat", "fasilitas", "dimana", "di mana",
@@ -245,6 +254,18 @@ class ZEEROAgent:
     def _get_keyword_based_response(self, user_input: str) -> str:
         s = user_input.lower()
         intent = self._resolve_intent(s)
+        if intent == "ormik":
+            ormik_info = self.get_ormik_info("tentang_ormik")
+            return (
+                "🎓 **Apa itu ORMIK?**\n\n"
+                f"**{ormik_info['nama_lengkap']}**\n"
+                f"**Institusi:** {ormik_info['institusi']}\n\n"
+                f"**Deskripsi:** {ormik_info['deskripsi']}\n\n"
+                f"**Nama Acara:** {ormik_info['nama_acara']} {ormik_info['tahun']}\n"
+                f"**Visi:** {ormik_info['visi']}\n\n"
+                "ORMIK adalah kegiatan wajib yang harus diikuti oleh semua mahasiswa baru STT Terpadu Nurul Fikri untuk beradaptasi dengan lingkungan kampus dan sistem perkuliahan.\n\n"
+                "Apakah Anda ingin tahu juga tentang jadwal ORMIK atau persyaratan peserta?"
+            )
         if intent == "hak":
             hak_list = self.get_ormik_info("hak_peserta")
             return (
@@ -378,7 +399,8 @@ class ZEEROAgent:
                 f"• Hotline: {k['hotline']}\n"
                 f"• WhatsApp: {k['whatsapp']}\n"
                 f"• Email: {k['email']}\n"
-                f"• Website: {k['website']}\n\n"
+                f"• Website: {k['website']}\n"
+                f"• YouTube: {k['youtube']}\n\n"
                 "Apakah Anda ingin tahu juga tentang lokasi kampus atau jadwal kegiatan?"
             )
 
@@ -498,6 +520,7 @@ class ZEEROAgent:
 
     def _resolve_intent(self, text: str) -> str | None:
         intents = {
+            "ormik": ["ormik", "ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "ormik apa", "tentang ormik", "pengertian ormik"],
             "hak": ["hak", "hak peserta", "peserta"],
             "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
             "ketentuan": ["ketentuan", "putra", "putri", "dress code", "pakaian"],
@@ -518,6 +541,7 @@ class ZEEROAgent:
         if not matches:
             return None
         priority = [
+            "ormik",
             "kontak",
             "jadwal",
             "divisi",
@@ -558,7 +582,8 @@ class ZEEROAgent:
                     "whatsapp": "0857-1624-3174",
                     "email": "info@nurulfikri.ac.id",
                     "website": "https://nurulfikri.ac.id",
-                    "maps_url": "https://maps.app.goo.gl/jnG4mhZV8QJDLdbNA"
+                    "maps_url": "https://maps.app.goo.gl/jnG4mhZV8QJDLdbNA",
+                    "youtube": "https://www.youtube.com/@STTNF"
                 }
             }
         }
