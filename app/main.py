@@ -38,7 +38,7 @@ class ZEEROAgent:
             "divisi": {
                 "steering_committee": {
                     "name": "Steering Committee",
-                    "position": "STEERING COMMITTEE",
+                "position": "STEERING COMMITTEE",
                     "description": "Steering Committee bertanggung jawab mengendalikan seluruh proses kegiatan, mulai dari tahap perencanaan hingga evaluasi akhir, guna memastikan kegiatan berjalan sesuai tujuan dan harapan."
                 },
                 "project_officer": {
@@ -492,12 +492,25 @@ class ZEEROAgent:
                 "it": "it_support"
             }
             
-            # Find specific division being asked
+            # Find specific division being asked - prioritize longer matches first
             specific_division = None
-            for keyword, division_key in division_keywords.items():
-                if keyword in s_lower:
-                    specific_division = division_key
-                    break
+            # Sort keywords by length (longest first) to prioritize exact matches
+            sorted_keywords = sorted(division_keywords.items(), key=lambda x: len(x[0]), reverse=True)
+            
+            for keyword, division_key in sorted_keywords:
+                # Use word boundary matching for short keywords to avoid false positives
+                if len(keyword) <= 2:
+                    # For very short keywords, check if they appear as separate words
+                    import re
+                    pattern = r'\b' + re.escape(keyword) + r'\b'
+                    if re.search(pattern, s_lower):
+                        specific_division = division_key
+                        break
+                else:
+                    # For longer keywords, use substring matching
+                    if keyword in s_lower:
+                        specific_division = division_key
+                        break
             
             # If specific division is asked, show detailed info
             if specific_division:
