@@ -428,28 +428,102 @@ class ZEEROAgent:
                 "\n\nApakah Anda ingin tahu juga tentang punishment atau tata tertib?"
             )
         if intent == "tugas":
-            if "day 1" in s or "day1" in s:
+            s_lower = s.lower()
+            
+            # Enhanced keyword detection for different task periods
+            day_1_keywords = [
+                "day 1", "day1", "hari 1", "hari ke-1", "hari ke 1", "hari pertama", 
+                "tugas hari pertama", "tugas day 1", "tugas hari 1", "hari satu",
+                "day satu", "tugas day satu"
+            ]
+            
+            last_day_keywords = [
+                "last day", "last", "akhir", "terakhir", "hari terakhir", "hari akhir",
+                "tugas akhir", "tugas terakhir", "tugas last day", "hari pamungkas"
+            ]
+            
+            pra_keywords = [
+                "pra", "pra ormik", "sebelum", "persiapan", "tugas pra", "tugas persiapan",
+                "sebelum ormik", "tugas sebelum"
+            ]
+            
+            # Check for specific day keywords
+            is_day_1 = any(keyword in s_lower for keyword in day_1_keywords)
+            is_last_day = any(keyword in s_lower for keyword in last_day_keywords)
+            is_pra = any(keyword in s_lower for keyword in pra_keywords)
+            
+            # Prioritize specific matches
+            if is_day_1:
                 individu = self.get_ormik_info("tugas", "individu", "day_1")
                 kompi = self.get_ormik_info("tugas", "kompi", "day_1")
-                response = "📝 **Tugas Day 1 ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
-                return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Last Day?"
-            elif "last" in s or "akhir" in s:
+                response = (
+                    "📝 **Tugas Day 1 ORMIK 2025 (Hari Pertama):**\n\n"
+                    "📅 **Tanggal:** Selasa, 16 September 2025\n\n"
+                    "👤 **Tugas Individu:**\n" + 
+                    "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + 
+                    "\n\n👥 **Tugas Kompi:**\n" + 
+                    "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)]) +
+                    "\n\n💡 **Catatan Penting:**\n"
+                    "• Tugas resume materi dikerjakan setelah kegiatan Day 1 selesai\n"
+                    "• Video yel-yel dan dokumentasi segera diunggah ke IG kompi\n"
+                    "• Video edukasi teknologi boleh dikerjakan sebelum Day 1\n\n"
+                    "📋 **Mau tahu tugas lainnya?** Tanyakan `tugas pra ormik` atau `tugas last day`!"
+                )
+                return response
+                
+            elif is_last_day:
                 individu = self.get_ormik_info("tugas", "individu", "last_day")
                 kompi = self.get_ormik_info("tugas", "kompi", "last_day")
-                response = "📝 **Tugas Last Day ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
-                return response + "\n\nApakah Anda ingin tahu juga tugas di Pra ORMIK atau Day 1?"
-            elif "pra" in s or "ormik" in s:
+                response = (
+                    "📝 **Tugas Last Day ORMIK 2025 (Hari Terakhir):**\n\n"
+                    "📅 **Tanggal:** Sabtu, 20 September 2025\n\n"
+                    "👤 **Tugas Individu:**\n" + 
+                    "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + 
+                    "\n\n👥 **Tugas Kompi:**\n" + 
+                    "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)]) +
+                    "\n\n💡 **Catatan Penting:**\n"
+                    "• Mini gift disiapkan sebelum Last Day\n"
+                    "• Surat pesawat dibuat kreatif dan bermakna\n"
+                    "• Unjuk bakat adalah kolaborasi 2 kompi per 1 Mentor\n\n"
+                    "📋 **Mau tahu tugas lainnya?** Tanyakan `tugas pra ormik` atau `tugas day 1`!"
+                )
+                return response
+                
+            elif is_pra or "ormik" in s_lower:
                 individu = self.get_ormik_info("tugas", "individu", "pra_ormik")
                 kompi = self.get_ormik_info("tugas", "kompi", "pra_ormik")
-                response = "📝 **Tugas Pra ORMIK 2025:**\n\n**Individu:**\n" + "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + "\n\n**Kompi:**\n" + "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)])
-                return response + "\n\nApakah Anda ingin tahu juga tugas di Day 1 atau Last Day?"
+                response = (
+                    "📝 **Tugas Pra ORMIK 2025 (Sebelum Kegiatan):**\n\n"
+                    "📅 **Deadline:** Sebelum Senin, 8 September 2025\n\n"
+                    "👤 **Tugas Individu:**\n" + 
+                    "\n".join([f"{idx+1}. {item}" for idx, item in enumerate(individu)]) + 
+                    "\n\n👥 **Tugas Kompi:**\n" + 
+                    "\n".join([f"{idx2+1}. {item}" for idx2, item in enumerate(kompi)]) +
+                    "\n\n💡 **Catatan Penting:**\n"
+                    "• Semua tugas wajib dikumpulkan via GForm yang disediakan\n"
+                    "• Name tag harus dilaminating dan sesuai template\n"
+                    "• Video perkenalan gunakan frame yang telah disediakan\n"
+                    "• Passport dibuat sama untuk setiap kompi\n\n"
+                    "📋 **Mau tahu tugas lainnya?** Tanyakan `tugas day 1` atau `tugas last day`!"
+                )
+                return response
             else:
+                # General overview when no specific day is mentioned
                 return (
-                    "📝 **Tugas ORMIK 2025:**\n\n"
-                    "**Pra ORMIK:** Name tag, twibbon IG, video perkenalan, hafal Hymne & Mars (individu); akun IG kompi, logo, yel-yel, passport (kompi).\n"
-                    "**Day 1:** Resume materi (individu); video yel-yel, dokumentasi, video edukasi teknologi (kompi).\n"
-                    "**Last Day:** Mini gift & surat pesawat (individu); unjuk bakat kolaborasi (kompi).\n\n"
-                    "Ingin tahu detail tugas untuk hari tertentu? Tanyakan misal: 'Tugas Day 1', 'Tugas Pra ORMIK', atau 'Tugas Last Day'."
+                    "📝 **Overview Tugas ORMIK 2025:**\n\n"
+                    "🗓️ **Tugas Pra ORMIK (Sebelum Kegiatan):**\n"
+                    "• **Individu:** Name tag, twibbon IG, video perkenalan, hafal lagu\n"
+                    "• **Kompi:** Akun IG, logo, yel-yel, passport, persiapan bakat\n\n"
+                    "📅 **Tugas Day 1 (Hari Pertama - 16 Sept):**\n"
+                    "• **Individu:** Resume materi Day 1\n"
+                    "• **Kompi:** Video yel-yel, dokumentasi, video edukasi teknologi\n\n"
+                    "🏆 **Tugas Last Day (Hari Terakhir - 20 Sept):**\n"
+                    "• **Individu:** Mini gift untuk Mentor, surat pesawat\n"
+                    "• **Kompi:** Unjuk bakat kolaborasi 2 kompi\n\n"
+                    "💡 **Ingin detail lengkap?** Tanyakan:\n"
+                    "• `tugas pra ormik` atau `tugas persiapan`\n"
+                    "• `tugas hari pertama` atau `tugas day 1`\n"
+                    "• `tugas terakhir` atau `tugas last day`"
                 )
 
         # Greetings/intro
@@ -868,7 +942,7 @@ class ZEEROAgent:
             "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata", "aturan", "rule"],
             "punishment": ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa", "denda"],
             "atribut": ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa", "kelengkapan"],
-            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa", "pekerjaan", "job"],
+            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa", "pekerjaan", "job", "hari pertama", "hari 1", "hari ke-1", "day 1", "hari terakhir", "last day", "tugas pra", "tugas persiapan"],
             "ketentuan": ["ketentuan", "putra", "putri", "dress code", "syarat", "requirement"],
             "perizinan": ["perizinan", "izin", "izinan", "tidak hadir", "absen"],
             "kewajiban": ["kewajiban", "wajib", "kewajiban peserta", "harus", "must"],
@@ -896,6 +970,13 @@ class ZEEROAgent:
                 if re.search(pattern, text):
                     return True
             return False
+        
+        # Task-specific combinations (HIGH PRIORITY - check first)
+        if "tugas" in matches and (
+            has_whole_word(text_lower, ["hari", "day", "pertama", "terakhir", "akhir", "pra", "persiapan", "sebelum"]) or 
+            any(phrase in text_lower for phrase in ["hari 1", "hari ke-1", "day 1", "last day", "hari pertama"])
+        ):
+            return "tugas"
         
         # Creator-specific combinations
         if "creator" in matches and has_whole_word(text_lower, ["pembuat", "developer", "creator", "tim pengembang"]):
