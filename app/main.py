@@ -363,6 +363,22 @@ class ZEEROAgent:
                 "ORMIK adalah kegiatan wajib yang harus diikuti oleh semua mahasiswa baru STT Terpadu Nurul Fikri untuk beradaptasi dengan lingkungan kampus dan sistem perkuliahan.\n\n"
                 "Apakah Anda ingin tahu juga tentang jadwal ORMIK atau persyaratan peserta?"
             )
+        
+        if intent == "creator":
+            return (
+                "👨‍💻 **Tentang Pembuat ZEERO Agent**\n\n"
+                "**Developer:** Tim Pengembang IT Support ORMIK EXPLORE 2025\n\n"
+                "🚀 **ZEERO Agent** adalah AI assistant yang dikembangkan khusus untuk membantu mahasiswa baru STT Terpadu Nurul Fikri dalam memperoleh informasi lengkap tentang ORMIK Explore 2025.\n\n"
+                "💡 **Fitur Unggulan:**\n"
+                "• Respons cepat dan akurat 24/7\n"
+                "• Informasi lengkap tentang ORMIK 2025\n"
+                "• Interface yang user-friendly\n"
+                "• Pemahaman konteks yang baik\n\n"
+                "� **Dikembangkan oleh:** Tim IT Support ORMIK EXPLORE 2025\n\n"
+                "Terima kasih telah menggunakan ZEERO Agent! 😊\n"
+                "Ada yang ingin Anda tanyakan tentang ORMIK?"
+            )
+        
         if intent == "hak":
             hak_list = self.get_ormik_info("hak_peserta")
             return (
@@ -438,30 +454,82 @@ class ZEEROAgent:
 
         # Greetings/intro
         if intent == "greetings":
-            return (
-                "Halo! Saya **ZEERO** 🤖, Asisten AI untuk ORMIK Explore 2025!\n\n"
-                "Saya siap bantu info tentang:\n"
-                "• 📅 **Jadwal** kegiatan ORMIK\n"
-                "• 👥 **Struktur organisasi** dan divisi\n"
-                "• 📍 **Lokasi** & fasilitas kampus\n"
-                "• 📞 **Kontak** informasi\n"
-                "• 💡 **Tips** & panduan\n"
-                "• 👔 **Dress code** & persiapan\n\n"
-                "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, atau `tips`! 😊"
-            )
+            # Check if it's the first interaction or user is asking about ZEERO specifically
+            if "zeero" in s.lower() or "siapa kamu" in s.lower() or "kamu siapa" in s.lower():
+                return (
+                    "Halo! Saya **ZEERO** 🤖 - **Z**one **E**ducational **E**xploration **R**obot **O**rganizer!\n\n"
+                    "🎯 **Saya adalah AI Assistant khusus untuk ORMIK Explore 2025** yang dikembangkan oleh **Tim Pengembang IT Support ORMIK EXPLORE 2025**.\n\n"
+                    "✨ **Yang bisa saya bantu:**\n"
+                    "• 📅 **Jadwal** lengkap kegiatan ORMIK\n"
+                    "• 👥 **Divisi & Organisasi** panitia\n"
+                    "• 📍 **Lokasi** kampus & fasilitas\n"
+                    "• 📞 **Kontak** informasi penting\n"
+                    "• 💡 **Tips & Panduan** persiapan\n"
+                    "• 👔 **Dress Code** & atribut\n"
+                    "• 📚 **Guidebook** & materi\n"
+                    "• ⚖️ **Aturan & Tata Tertib**\n\n"
+                    "🚀 **Saya siap membantu 24/7 dengan respons yang cepat dan akurat!**\n\n"
+                    "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, `kontak`, atau `tips`! 😊"
+                )
+            else:
+                # Simple greeting response
+                return (
+                    "Halo! Saya **ZEERO** 🤖, AI Assistant untuk ORMIK Explore 2025!\n\n"
+                    "Saya siap bantu info tentang:\n"
+                    "• 📅 **Jadwal** kegiatan ORMIK\n"
+                    "• 👥 **Struktur organisasi** dan divisi\n"
+                    "• 📍 **Lokasi** & fasilitas kampus\n"
+                    "• 📞 **Kontak** informasi\n"
+                    "• 💡 **Tips** & panduan\n"
+                    "• 👔 **Dress code** & persiapan\n\n"
+                    "Tanya dengan kata kunci seperti `jadwal`, `divisi`, `lokasi`, atau `tips`! 😊"
+                )
 
         if intent == "jadwal":
             lines = [f"• **{x['title']}** - {x['date']}" for x in self.context['ormikData']['schedule']]
             k = self.context['ormikData']['kampus']
-            return (
-                "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n" +
-                "⏰ **Waktu:**\n• Peserta wajib datang tepat waktu pada pukul **06:30 WIB** sesuai tata tertib.\n"
-                "• Registrasi ulang 30 menit sebelumnya\n"
-                "• Pastikan datang tepat waktu ya!\n\n"
-                f"📖 **Guidebook:** Unduh guidebook ORMIK untuk rundown lengkap di: {k['guidebook_url']}\n"
-                "*(Klik link di atas untuk langsung mengunduh guidebook)*\n\n"
-                "Apakah Anda ingin tahu juga tentang lokasi kampus atau tips persiapan?"
-            )
+            
+            # Check if user is asking about specific time-related aspects
+            current_date = "11 September 2025"  # Current date context
+            s_lower = s.lower()
+            
+            base_response = "📅 **Jadwal ORMIK Explore 2025:**\n\n" + "\n".join(lines) + "\n\n"
+            
+            if "jam" in s_lower or "waktu" in s_lower or "berapa" in s_lower:
+                base_response += (
+                    "⏰ **Detail Waktu:**\n"
+                    "• **Jam Kedatangan:** 06:30 WIB (WAJIB tepat waktu)\n"
+                    "• **Registrasi Ulang:** 06:00 WIB (30 menit sebelumnya)\n"
+                    "• **Kegiatan Dimulai:** 07:00 WIB\n"
+                    "• **Durasi:** Full day (06:30 - selesai)\n\n"
+                    "⚠️ **PENTING:** Keterlambatan akan dikenakan sanksi sesuai tata tertib!\n\n"
+                )
+            else:
+                base_response += (
+                    "⏰ **Waktu:**\n• Peserta wajib datang tepat waktu pada pukul **06:30 WIB** sesuai tata tertib.\n"
+                    "• Registrasi ulang 30 menit sebelumnya\n"
+                    "• Pastikan datang tepat waktu ya!\n\n"
+                )
+            
+            if "download" in s_lower or "unduh" in s_lower or "guidebook" in s_lower:
+                base_response += (
+                    f"📖 **Guidebook & Rundown Lengkap:**\n"
+                    f"🔗 {k['guidebook_url']}\n"
+                    "*(Klik link di atas untuk langsung mengunduh guidebook PDF)*\n\n"
+                    "📋 **Isi Guidebook:**\n"
+                    "• Rundown detail setiap hari\n"
+                    "• Informasi lokasi dan ruangan\n"
+                    "• Aturan dan ketentuan lengkap\n\n"
+                )
+            else:
+                base_response += (
+                    f"📖 **Guidebook:** Unduh guidebook ORMIK untuk rundown lengkap di: {k['guidebook_url']}\n"
+                    "*(Klik link di atas untuk langsung mengunduh guidebook)*\n\n"
+                )
+            
+            base_response += "💡 **Ingin tahu lebih lanjut?** Tanyakan tentang lokasi kampus, tips persiapan, atau divisi panitia!"
+            
+            return base_response
 
         if intent == "divisi":
             # Check if user is asking for specific division
@@ -567,15 +635,68 @@ class ZEEROAgent:
 
         if intent == "tips":
             k = self.context['ormikData']['kampus']
-            return (
-                "💡 **Tips Sukses ORMIK 2025:**\n\n"
-                "✅ **Sebelum:** Baca guidebook, siapkan dress code, istirahat cukup, cek jadwal, siapkan tas.\n"
-                "✅ **Selama:** Datang tepat waktu pukul 06:30 WIB sesuai tata tertib, aktif, ramah, ikuti arahan mentor, jaga kebersihan.\n"
-                "✅ **Mindset:** Terbuka, berani tanya, nikmati proses. 🌟\n\n"
-                f"📖 **Guidebook:** {k['guidebook_url']}\n"
-                "*(Klik link di atas untuk mengunduh guidebook lengkap)*\n\n"
-                "Apakah Anda ingin tahu juga tentang dress code atau atribut yang perlu dibawa?"
-            )
+            s_lower = s.lower()
+            
+            # Contextual tips based on user's specific question
+            if "persiapan" in s_lower or "sebelum" in s_lower:
+                return (
+                    "🎯 **Tips Persiapan ORMIK 2025:**\n\n"
+                    "📚 **H-3 sampai H-1:**\n"
+                    "• Download & baca guidebook lengkap\n"
+                    "• Siapkan dress code sesuai ketentuan\n"
+                    "• Cek ulang jadwal dan lokasi\n"
+                    "• Istirahat cukup (min. 7-8 jam)\n"
+                    "• Siapkan mental positif & semangat!\n\n"
+                    "⏰ **Malam sebelumnya:**\n"
+                    "• Siapkan tas dengan atribut lengkap\n"
+                    "• Set alarm untuk bangun lebih pagi\n"
+                    "• Cek kondisi cuaca untuk antisipasi\n"
+                    "• Charge HP dan power bank\n\n"
+                    f"📖 **Guidebook:** {k['guidebook_url']}\n"
+                    "💡 **Next:** Tanyakan tentang `dress code` atau `atribut`!"
+                )
+            elif "selama" in s_lower or "saat" in s_lower:
+                return (
+                    "🚀 **Tips Selama ORMIK 2025:**\n\n"
+                    "⏰ **Kedatangan:**\n"
+                    "• Datang TEPAT WAKTU pukul 06:30 WIB\n"
+                    "• Registrasi ulang 30 menit sebelumnya\n"
+                    "• Bawa semua atribut yang diperlukan\n\n"
+                    "🤝 **Interaksi:**\n"
+                    "• Aktif berpartisipasi dalam kegiatan\n"
+                    "• Ramah dengan sesama peserta\n"
+                    "• Hormati mentor dan panitia\n"
+                    "• Berani bertanya jika ada yang bingung\n\n"
+                    "✨ **Mindset Positif:**\n"
+                    "• Terbuka dengan hal-hal baru\n"
+                    "• Nikmati setiap proses pembelajaran\n"
+                    "• Jaga kebersihan dan ketertiban\n"
+                    "• Bangun networking yang baik\n\n"
+                    "� **Ingin tips spesifik lainnya?** Tanyakan tentang `dress code` atau `punishment`!"
+                )
+            else:
+                # Comprehensive tips response
+                return (
+                    "💡 **Tips Sukses ORMIK 2025:**\n\n"
+                    "🎯 **Sebelum Kegiatan:**\n"
+                    "• 📚 Baca guidebook dari awal sampai akhir\n"
+                    "• 👔 Siapkan dress code sesuai ketentuan\n"
+                    "• 😴 Istirahat cukup (min. 7-8 jam)\n"
+                    "• 📅 Cek jadwal dan lokasi dengan teliti\n"
+                    "• 🎒 Siapkan tas dengan atribut lengkap\n\n"
+                    "🚀 **Selama Kegiatan:**\n"
+                    "• ⏰ Datang TEPAT WAKTU pukul 06:30 WIB\n"
+                    "• 🤝 Aktif, ramah, dan hormati semua orang\n"
+                    "• 🙋‍♀️ Berani bertanya jika ada yang bingung\n"
+                    "• 🧹 Jaga kebersihan dan ketertiban\n"
+                    "• 📱 Dokumentasikan momen-momen penting\n\n"
+                    "✨ **Mindset Positif:**\n"
+                    "• Terbuka dengan pengalaman baru 🌟\n"
+                    "• Nikmati setiap proses pembelajaran 📈\n"
+                    "• Bangun networking yang baik 🤝\n\n"
+                    f"📖 **Guidebook Lengkap:** {k['guidebook_url']}\n"
+                    "💡 **Mau tips spesifik?** Tanyakan `tips persiapan` atau `tips selama ormik`!"
+                )
 
         if intent == "dress":
             return (
@@ -676,42 +797,84 @@ class ZEEROAgent:
         return min(conf, 1.0)
 
     def _has_keyword(self, text: str, keywords: list[str]) -> bool:
-        text_lower = text.lower()
+        text_lower = text.lower().strip()
         
-        # Check for exact phrase matches first
-        for keyword in keywords:
-            if keyword.lower() in text_lower:
+        # Normalize text - remove extra spaces and special characters for better matching
+        normalized_text = re.sub(r'[^\w\s]', ' ', text_lower)
+        normalized_text = re.sub(r'\s+', ' ', normalized_text).strip()
+        
+        # Sort keywords by length (longest first) for better phrase matching
+        sorted_keywords = sorted(keywords, key=len, reverse=True)
+        
+        # Check for exact phrase matches first (highest priority)
+        for keyword in sorted_keywords:
+            keyword_lower = keyword.lower().strip()
+            normalized_keyword = re.sub(r'[^\w\s]', ' ', keyword_lower)
+            normalized_keyword = re.sub(r'\s+', ' ', normalized_keyword).strip()
+            
+            # Exact phrase match in original text
+            if keyword_lower in text_lower:
+                return True
+            
+            # Exact phrase match in normalized text
+            if normalized_keyword in normalized_text:
                 return True
         
         # For single word keywords, check if they appear as whole words
-        text_words = re.findall(r'\b\w+\b', text_lower)
+        text_words = re.findall(r'\b\w+\b', normalized_text)
         for keyword in keywords:
-            keyword_lower = keyword.lower()
+            keyword_lower = keyword.lower().strip()
             # If keyword is a single word, check for exact word match
             if ' ' not in keyword_lower and keyword_lower in text_words:
                 return True
-                
+        
+        # Fuzzy matching for common typos (only for longer keywords to avoid false positives)
+        for keyword in sorted_keywords:
+            if len(keyword) > 4:  # Only apply fuzzy matching to longer keywords
+                keyword_lower = keyword.lower().strip()
+                # Check if keyword appears with minor variations (1 character difference)
+                if self._fuzzy_match(normalized_text, keyword_lower):
+                    return True
+                    
         return False
+    
+    def _fuzzy_match(self, text: str, keyword: str) -> bool:
+        """Check for fuzzy match with edit distance of 1 for keywords > 4 characters"""
+        import difflib
+        text_words = text.split()
+        
+        # Check if any word in text is similar to keyword
+        for word in text_words:
+            if len(word) > 3 and len(keyword) > 3:
+                # Calculate similarity ratio
+                similarity = difflib.SequenceMatcher(None, word, keyword).ratio()
+                if similarity >= 0.8:  # 80% similarity threshold
+                    return True
+        
+        # Check if keyword appears in text with minor variations
+        close_matches = difflib.get_close_matches(keyword, text_words, n=1, cutoff=0.8)
+        return len(close_matches) > 0
 
     def _resolve_intent(self, text: str) -> str | None:
         intents = {
-            "greetings": ["halo", "hai", "hello", "zeero apa", "siapa kamu", "kamu siapa"],
-            "jadwal": ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari"],
+            "creator": ["tim pengembang", "pembuat", "developer", "creator", "pencipta", "siapa yang buat", "who created", "who made", "it support ormik"],
+            "greetings": ["halo", "hai", "hello", "zeero apa", "siapa kamu", "kamu siapa", "perkenalan", "intro"],
+            "jadwal": ["jadwal", "schedule", "tanggal", "waktu", "kapan", "jam", "hari", "berapa", "mulai", "selesai"],
             "divisi": ["divisi", "struktur", "organisasi", "tim", "steering", "project officer", "po", "sekretaris", "bendahara", "public relation", "pr", "liaison", "lo", "event", "media", "kreatif", "kedisiplinan", "kedis", "mentor", "logistik", "konsumsi", "konsum", "medis", "it support", "it"],
-            "lokasi": ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana"],
-            "kontak": ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp"],
-            "tips": ["tips", "saran", "panduan", "cara", "bagaimana"],
-            "dress": ["dress", "pakaian", "baju", "seragam", "outfit"],
-            "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata"],
-            "punishment": ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa"],
-            "atribut": ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa"],
-            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa"],
-            "ketentuan": ["ketentuan", "putra", "putri", "dress code"],
-            "perizinan": ["perizinan", "izin", "izinan"],
-            "kewajiban": ["kewajiban", "wajib", "kewajiban peserta"],
-            "hak": ["hak", "hak peserta"],
-            "guidebook": ["guidebook", "guide book", "buku panduan", "panduan", "rundown", "download", "unduh"],
-            "ormik": ["ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "tentang ormik", "pengertian ormik", "definisi ormik"],
+            "lokasi": ["lokasi", "kampus", "tempat", "alamat", "fasilitas", "dimana", "di mana", "gedung", "ruangan", "parkir"],
+            "kontak": ["kontak", "contact", "hubungi", "telepon", "whatsapp", "email", "instagram", "cp", "nomor", "wa"],
+            "tips": ["tips", "saran", "panduan", "cara", "bagaimana", "strategi", "persiapan", "advice"],
+            "dress": ["dress", "pakaian", "baju", "seragam", "outfit", "kostum", "berpakaian"],
+            "tata_tertib": ["tata tertib", "peraturan", "tertib", "tata", "aturan", "rule"],
+            "punishment": ["punishment", "hukuman", "sanksi", "pelanggaran", "hukum", "sanksi apa", "denda"],
+            "atribut": ["atribut", "perlengkapan", "barang", "bawa", "perlu", "bawa apa", "apa yang dibawa", "kelengkapan"],
+            "tugas": ["tugas", "assignment", "kerjaan", "kerja", "tugas apa", "pekerjaan", "job"],
+            "ketentuan": ["ketentuan", "putra", "putri", "dress code", "syarat", "requirement"],
+            "perizinan": ["perizinan", "izin", "izinan", "tidak hadir", "absen"],
+            "kewajiban": ["kewajiban", "wajib", "kewajiban peserta", "harus", "must"],
+            "hak": ["hak", "hak peserta", "boleh", "dapat", "bisa"],
+            "guidebook": ["guidebook", "guide book", "buku panduan", "panduan", "rundown", "download", "unduh", "pdf"],
+            "ormik": ["ormik sttnf", "ormik explore", "ormik 2025", "apa itu ormik", "tentang ormik", "pengertian ormik", "definisi ormik", "orientasi"],
         }
         
         matches = []
@@ -722,12 +885,49 @@ class ZEEROAgent:
         if not matches:
             return None
         
-        # Handle specific combinations first
-        if "kontak" in matches and "panitia" in text.lower():
+        # Handle specific combinations and context first
+        text_lower = text.lower()
+        
+        # Helper function for whole word matching in combinations
+        def has_whole_word(text: str, words: list) -> bool:
+            import re
+            for word in words:
+                pattern = r'\b' + re.escape(word) + r'\b'
+                if re.search(pattern, text):
+                    return True
+            return False
+        
+        # Creator-specific combinations
+        if "creator" in matches and has_whole_word(text_lower, ["pembuat", "developer", "creator", "tim pengembang"]):
+            return "creator"
+            
+        # Contact-specific combinations (use whole word matching to avoid false positives)
+        if "kontak" in matches and (has_whole_word(text_lower, ["panitia", "whatsapp"]) or "nomor" in text_lower or "cp " in text_lower):
             return "kontak"
+            
+        # Schedule-specific combinations  
+        if "jadwal" in matches and has_whole_word(text_lower, ["hari", "tanggal", "kapan", "jam", "waktu", "berapa", "mulai", "selesai"]):
+            return "jadwal"
+            
+        # Division-specific combinations
+        if "divisi" in matches and has_whole_word(text_lower, ["struktur", "organisasi", "tim", "panitia"]):
+            return "divisi"
+            
+        # Location-specific combinations
+        if "lokasi" in matches and has_whole_word(text_lower, ["kampus", "alamat", "gedung", "parkir", "fasilitas"]):
+            return "lokasi"
+            
+        # Tips-specific combinations
+        if "tips" in matches and has_whole_word(text_lower, ["persiapan", "strategi", "cara", "panduan"]):
+            return "tips"
+            
+        # Dress code combinations
+        if ("dress" in matches or "ketentuan" in matches) and has_whole_word(text_lower, ["pakaian", "baju", "seragam", "outfit"]):
+            return "dress"
             
         # Priority order - more specific intents first
         priority = [
+            "creator",    # Highest priority for creator information
             "greetings",
             "guidebook",
             "jadwal", 
